@@ -1,5 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Layout from '../views/Layout.vue'
+import List from '../views/List.vue'
 import Login from '../views/Login.vue'
 
 // 在 Vue-router新版本中，需要使用createRouter来创建路由
@@ -15,6 +16,10 @@ export default createRouter({
         {
           path: '',
           component: Login,
+        },
+        {
+          path: '/list',
+          component: List,
         },
         {
           path: '/login',
