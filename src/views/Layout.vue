@@ -25,17 +25,10 @@
           <router-link to="/" class="navbar-item">Home</router-link>
           <router-link to="/list" class="navbar-item">List</router-link>
         </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-primary">Log in</a>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
+
   <section class="section">
     <router-view />
   </section>

@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import {reactive} from 'vue'
-export default {
+import {reactive, defineComponent} from 'vue'
+export default defineComponent({
   name: 'HelloWorld',
   props: {
     msg: {
@@ -26,5 +26,5 @@ export default {
     }
     return {state, add}
   },
-}
+})
 </script>

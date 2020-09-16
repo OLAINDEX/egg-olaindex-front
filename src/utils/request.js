@@ -2,7 +2,7 @@ import axios from 'axios'
 import {toast} from 'bulma-toast'
 
 const config = {
-  baseURL: '/',
+  baseURL: 'http://localhost:3000',
   timeout: 5000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 }
