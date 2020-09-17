@@ -34,15 +34,15 @@
 
         <tbody>
           <tr>
-            <td colspan="4" class="has-text-grey-light" @click="refresh">
+            <td colspan="4" class="has-text-grey-light" @click="fetchItem()">
               <span class="icon is-medium">
-                <i class="fas fa-sync" aria-hidden="true"></i>
+                <i class="fas fa-sync" :class="{'fa-spin':loading}" aria-hidden="true"></i>
               </span>
               刷新列表
             </td>
           </tr>
           <tr>
-            <td colspan="4" class="has-text-grey-light" @click="goBack">
+            <td colspan="4" class="has-text-grey-light" @click="goBack()">
               <span class="icon is-medium">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
               </span>
@@ -50,7 +50,7 @@
             </td>
           </tr>
 
-          <tr v-for="item in state.list" :key="item.name">
+          <tr v-for="item in list" :key="item.name" @click="goTarget(item.name)">
             <td>
               <span class="icon is-small">
                 <i
@@ -74,28 +74,46 @@
   </div>
 </template>
 <script>
-import {reactive, defineComponent} from 'vue'
+import {reactive, toRefs, watchEffect, defineComponent} from 'vue'
 import share from '../api/share'
+import {trim} from '../utils/index'
 export default defineComponent({
   setup() {
     const state = reactive({
+      path: '/',
+      loading: false,
       list: [],
     })
-    const refresh = () => {
+    const fetchItem = () => {
+      state.loading = true
       share
-        .list({
+        .fetchItem({
           params: {
-            path: '/Share',
+            path: state.path,
           },
         })
         .then((res) => {
           state.list = res.data.list
+          state.loading = false
         })
     }
-    const goBack = () => {}
-    refresh()
+    const goTarget = (name) => {
+      let arr = state.path.split('/')
+      arr.push(name)
+      state.path = trim(arr.join('/'), '/')
+    }
+    const goBack = () => {
+      let arr = state.path.split('/')
+      arr.pop()
+      state.path = trim(arr.join('/'), '/')
+    }
+    watchEffect(() => {
+      // watch 副作用函数 首次加载会触发,当值发生变化也会触发
+      console.log('watch', state.path)
+      fetchItem()
+    })
 
-    return {state, refresh, goBack}
+    return {...toRefs(state), fetchItem, goBack, goTarget}
   },
 })
 </script>

@@ -1,11 +1,12 @@
 import request from '../utils/request'
 
-const list = (params) => {
+const fetchItem = (params) => {
   return request.get('/share', params)
 }
 
+
 const share = {
-  list,
+  fetchItem,
 }
 
 export default share
