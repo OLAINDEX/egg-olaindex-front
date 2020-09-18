@@ -15,10 +15,6 @@ const router = createRouter({
       children: [
         {
           path: '',
-          component: Login,
-        },
-        {
-          path: '/list',
           component: List,
         },
         {

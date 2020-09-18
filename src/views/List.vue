@@ -10,11 +10,7 @@
             Home
           </a>
         </li>
-        <li
-          v-for="pathItem in pathArr"
-          :key="pathItem.index"
-          :class="{ 'is-active': pathArr.slice(-1)==pathItem}"
-        >
+        <li v-for="pathItem in pathArr" :key="pathItem.index" :class="{'is-active': pathArr.slice(-1) == pathItem}">
           <a href="javascript:void(0)" @click="goBack(pathItem)">{{ pathItem }}</a>
         </li>
       </ul>
@@ -34,7 +30,7 @@
           <tr>
             <td colspan="4" class="has-text-grey-light" @click="fetchItem()">
               <span class="icon is-medium">
-                <i class="fas fa-sync" :class="{'fa-spin':loading}" aria-hidden="true"></i>
+                <i class="fas fa-sync" :class="{'fa-spin': loading}" aria-hidden="true"></i>
               </span>
               刷新列表
             </td>
@@ -48,7 +44,7 @@
             </td>
           </tr>
 
-          <tr v-for="item in list" :key="item.index" @click="goTarget(item.name)">
+          <tr v-for="item in list" :key="item.index" @click="goTarget(item.name, item.type)">
             <td>
               <span class="icon is-small">
                 <i
@@ -64,23 +60,33 @@
             <td>-</td>
           </tr>
           <tr>
-            <td colspan="4">5 个项目 123 MB</td>
+            <td colspan="4">{{ item.childCount }} 个项目 {{ item.size }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <div class="box container">
+    <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
+    <div class="columns">
+      <div class="column markdown-body" v-html="readme"></div>
+    </div>
+  </div>
 </template>
 <script>
+import 'github-markdown-css/github-markdown.css'
 import {defineComponent, reactive, computed, watchEffect, toRefs} from 'vue'
 import share from '../api/share'
 import {trim} from '../utils/index'
+
 export default defineComponent({
   setup() {
     const state = reactive({
       pathArr: [],
       loading: false,
       list: [],
+      item: [],
+      readme: '',
     })
     const path = computed(() => trim(state.pathArr.join('/'), '/'))
     const fetchItem = () => {
@@ -93,14 +99,32 @@ export default defineComponent({
         })
         .then((res) => {
           state.list = res.data.list
+          state.item = res.data.item
           state.loading = false
         })
     }
-    const goTarget = (name) => {
-      state.pathArr.push(name)
-      state.pathArr.filter((e) => {
-        return e.replace(/(\r\n|\n|\r)/gm, '')
-      })
+    const fetchReadMe = () => {
+      let arr = state.pathArr
+      let readme = arr.concat(['README.md'])
+      let path = trim(readme.join('/'), '/')
+      share
+        .fetchItem({
+          params: {
+            path,
+            preview: true,
+          },
+        })
+        .then((res) => {
+          state.readme = res
+        })
+    }
+    const goTarget = (name, type) => {
+      if (type === 1) {
+        state.pathArr.push(name)
+        state.pathArr.filter((e) => {
+          return e.replace(/(\r\n|\n|\r)/gm, '')
+        })
+      }
     }
     const goBack = (name) => {
       if (typeof name === 'undefined') {
@@ -117,6 +141,7 @@ export default defineComponent({
       console.log('req_path:', path.value)
       console.log('req_pathArr:', state.pathArr)
       fetchItem()
+      fetchReadMe()
     })
     return {...toRefs(state), path, fetchItem, goBack, goTarget}
   },

@@ -23,7 +23,6 @@
       <div id="navbarItems" class="navbar-menu" :class="{ 'is-active': state.isActive}">
         <div class="navbar-start">
           <router-link to="/" class="navbar-item">Home</router-link>
-          <router-link to="/list" class="navbar-item">List</router-link>
         </div>
       </div>
     </div>
