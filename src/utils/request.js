@@ -31,8 +31,6 @@ _axios.interceptors.response.use(
       message: '网络错误,无法请求到数据！',
       type: 'is-danger',
       dismissible: true,
-      pauseOnHover: true,
-      animate: {in: 'fadeIn', out: 'fadeOut'},
     })
     return Promise.reject(error)
   },

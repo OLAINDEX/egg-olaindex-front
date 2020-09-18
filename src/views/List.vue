@@ -3,21 +3,19 @@
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
         <li>
-          <a href="#">
+          <a href="javascript:void(0)" @click="goBack(0)">
             <span class="icon is-small">
               <i class="fas fa-home" aria-hidden="true"></i>
             </span>
             Home
           </a>
         </li>
-        <li>
-          <a href="#">Documentation</a>
-        </li>
-        <li>
-          <a href="#">Components</a>
-        </li>
-        <li class="is-active">
-          <a href="#" aria-current="page">Breadcrumb</a>
+        <li
+          v-for="pathItem in pathArr"
+          :key="pathItem.index"
+          :class="{ 'is-active': pathArr.slice(-1)==pathItem}"
+        >
+          <a href="javascript:void(0)" @click="goBack(pathItem)">{{ pathItem }}</a>
         </li>
       </ul>
     </nav>
@@ -41,7 +39,7 @@
               刷新列表
             </td>
           </tr>
-          <tr>
+          <tr v-if="path">
             <td colspan="4" class="has-text-grey-light" @click="goBack()">
               <span class="icon is-medium">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
@@ -50,7 +48,7 @@
             </td>
           </tr>
 
-          <tr v-for="item in list" :key="item.name" @click="goTarget(item.name)">
+          <tr v-for="item in list" :key="item.index" @click="goTarget(item.name)">
             <td>
               <span class="icon is-small">
                 <i
@@ -74,22 +72,23 @@
   </div>
 </template>
 <script>
-import {reactive, toRefs, watchEffect, defineComponent} from 'vue'
+import {defineComponent, reactive, computed, watchEffect, toRefs} from 'vue'
 import share from '../api/share'
 import {trim} from '../utils/index'
 export default defineComponent({
   setup() {
     const state = reactive({
-      path: '/',
+      pathArr: [],
       loading: false,
       list: [],
     })
+    const path = computed(() => trim(state.pathArr.join('/'), '/'))
     const fetchItem = () => {
       state.loading = true
       share
         .fetchItem({
           params: {
-            path: state.path,
+            path: path.value,
           },
         })
         .then((res) => {
@@ -98,22 +97,28 @@ export default defineComponent({
         })
     }
     const goTarget = (name) => {
-      let arr = state.path.split('/')
-      arr.push(name)
-      state.path = trim(arr.join('/'), '/')
+      state.pathArr.push(name)
+      state.pathArr.filter((e) => {
+        return e.replace(/(\r\n|\n|\r)/gm, '')
+      })
     }
-    const goBack = () => {
-      let arr = state.path.split('/')
-      arr.pop()
-      state.path = trim(arr.join('/'), '/')
+    const goBack = (name) => {
+      if (typeof name === 'undefined') {
+        state.pathArr.pop()
+      } else if (name === 0) {
+        state.pathArr = []
+      } else {
+        let index = state.pathArr.indexOf(name)
+        state.pathArr = state.pathArr.slice(0, index + 1)
+      }
     }
     watchEffect(() => {
       // watch 副作用函数 首次加载会触发,当值发生变化也会触发
-      console.log('watch', state.path)
+      console.log('req_path:', path.value)
+      console.log('req_pathArr:', state.pathArr)
       fetchItem()
     })
-
-    return {...toRefs(state), fetchItem, goBack, goTarget}
+    return {...toRefs(state), path, fetchItem, goBack, goTarget}
   },
 })
 </script>
