@@ -66,7 +66,7 @@
       </table>
     </div>
   </div>
-  <div class="box container">
+  <div v-if="readme" class="box container">
     <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
     <div class="columns">
       <div class="column markdown-body" v-html="readme"></div>
@@ -141,6 +141,7 @@ export default defineComponent({
       console.log('req_path:', path.value)
       console.log('req_pathArr:', state.pathArr)
       fetchItem()
+      state.readme = ''
       fetchReadMe()
     })
     return {...toRefs(state), path, fetchItem, goBack, goTarget}
