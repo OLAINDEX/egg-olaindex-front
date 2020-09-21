@@ -112,13 +112,12 @@ export default defineComponent({
       }, 1000)
     }
     const fetchReadMe = () => {
-      let arr = state.pathArr
-      let readme = arr.concat(['README.md'])
-      let path = trim(readme.join('/'), '/')
+      let readme = state.pathArr.concat(['README.md'])
+      let doc = trim(readme.join('/'), '/')
       share
         .fetchItem({
           params: {
-            path,
+            path: doc,
             preview: true,
           },
         })
