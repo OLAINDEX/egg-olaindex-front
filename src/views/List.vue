@@ -10,7 +10,11 @@
             Home
           </a>
         </li>
-        <li v-for="pathItem in pathArr" :key="pathItem.index" :class="{'is-active': pathArr.slice(-1) == pathItem}">
+        <li
+          v-for="pathItem in pathArr"
+          :key="pathItem.index"
+          :class="{'is-active': pathArr.slice(-1) == pathItem}"
+        >
           <a href="javascript:void(0)" @click="goBack(pathItem)">{{ pathItem }}</a>
         </li>
       </ul>
@@ -19,10 +23,10 @@
       <table class="table is-hoverable is-fullwidth is-completely-borderless">
         <thead>
           <tr>
-            <th>FILE</th>
-            <th>SIZE</th>
-            <th>DATE</th>
-            <th>MORE</th>
+            <th>文件</th>
+            <th>大小</th>
+            <th>时间</th>
+            <th>更多</th>
           </tr>
         </thead>
 
@@ -32,7 +36,7 @@
               <span class="icon is-medium">
                 <i class="fas fa-sync" :class="{'fa-spin': loading}" aria-hidden="true"></i>
               </span>
-              刷新列表
+              刷新
             </td>
           </tr>
           <tr v-if="path">
@@ -67,7 +71,9 @@
     </div>
   </div>
   <div v-if="readme" class="box container">
-    <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
+    <p class="title is-6">
+      <i class="fab fa-readme" aria-hidden="true"></i> README
+    </p>
     <div class="columns">
       <div class="column markdown-body" v-html="readme"></div>
     </div>
@@ -91,17 +97,19 @@ export default defineComponent({
     const path = computed(() => trim(state.pathArr.join('/'), '/'))
     const fetchItem = () => {
       state.loading = true
-      share
-        .fetchItem({
-          params: {
-            path: path.value,
-          },
-        })
-        .then((res) => {
-          state.list = res.data.list
-          state.item = res.data.item
-          state.loading = false
-        })
+      setTimeout(() => {
+        share
+          .fetchItem({
+            params: {
+              path: path.value,
+            },
+          })
+          .then((res) => {
+            state.list = res.data.list
+            state.item = res.data.item
+            state.loading = false
+          })
+      }, 1000)
     }
     const fetchReadMe = () => {
       let arr = state.pathArr
