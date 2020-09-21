@@ -129,7 +129,7 @@ export default defineComponent({
     const goTarget = (name, type) => {
       if (type === 1) {
         state.pathArr.push(name)
-        state.pathArr.filter((e) => {
+        state.pathArr = state.pathArr.filter((e) => {
           return e.replace(/(\r\n|\n|\r)/gm, '')
         })
       }
@@ -147,7 +147,7 @@ export default defineComponent({
     watchEffect(() => {
       // watch 副作用函数 首次加载会触发,当值发生变化也会触发
       console.log('req_path:', path.value)
-      console.log('req_pathArr:', state.pathArr)
+      console.log('req_arr:', state.pathArr)
       fetchItem()
       state.readme = ''
       fetchReadMe()
