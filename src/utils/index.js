@@ -4,6 +4,7 @@ export const defaultValue = (value, defaultValue) => {
     case 'undefined':
     case null:
     case undefined:
+    case '':
       return defaultValue
     default:
       return value

@@ -10,11 +10,7 @@
             Home
           </a>
         </li>
-        <li
-          v-for="pathItem in pathArr"
-          :key="pathItem.index"
-          :class="{'is-active': pathArr.slice(-1) == pathItem}"
-        >
+        <li v-for="pathItem in pathArr" :key="pathItem.index" :class="{'is-active': pathArr.slice(-1) == pathItem}">
           <a href="javascript:void(0)" @click="goBack(pathItem)">{{ pathItem }}</a>
         </li>
       </ul>
@@ -24,15 +20,15 @@
         <thead>
           <tr>
             <th>文件</th>
-            <th>大小</th>
-            <th>时间</th>
+            <th class="is-hidden-mobile">大小</th>
+            <th class="is-hidden-mobile">时间</th>
             <th>更多</th>
           </tr>
         </thead>
 
         <tbody>
           <tr>
-            <td colspan="4" class="has-text-grey-light" @click="fetchItem()">
+            <td colspan="4" class="has-text-grey-light" @click="refreshPage()">
               <span class="icon is-medium">
                 <i class="fas fa-sync" :class="{'fa-spin': loading}" aria-hidden="true"></i>
               </span>
@@ -59,8 +55,8 @@
               </span>
               {{ item.name }}
             </td>
-            <td>{{ item.size }}</td>
-            <td>{{ item.time }}</td>
+            <td class="is-hidden-mobile">{{ item.size }}</td>
+            <td class="is-hidden-mobile">{{ item.time }}</td>
             <td>-</td>
           </tr>
           <tr>
@@ -71,9 +67,7 @@
     </div>
   </div>
   <div v-if="readme" class="box container">
-    <p class="title is-6">
-      <i class="fab fa-readme" aria-hidden="true"></i> README
-    </p>
+    <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
     <div class="columns">
       <div class="column markdown-body" v-html="readme"></div>
     </div>
@@ -81,12 +75,15 @@
 </template>
 <script>
 import 'github-markdown-css/github-markdown.css'
-import {defineComponent, reactive, computed, watchEffect, toRefs} from 'vue'
+import {defineComponent, reactive, computed, watch, watchEffect, toRefs} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
-import {trim} from '../utils/index'
+import {defaultValue, trim} from '../utils/index'
 
 export default defineComponent({
   setup() {
+    const router = useRouter()
+    const route = useRoute()
     const state = reactive({
       pathArr: [],
       loading: false,
@@ -95,6 +92,7 @@ export default defineComponent({
       readme: '',
     })
     const path = computed(() => trim(state.pathArr.join('/'), '/'))
+
     const fetchItem = () => {
       state.loading = true
       setTimeout(() => {
@@ -125,12 +123,20 @@ export default defineComponent({
           state.readme = res
         })
     }
+    const refreshPage = () => {
+      fetchItem()
+      state.readme = ''
+      fetchReadMe()
+    }
     const goTarget = (name, type) => {
       if (type === 1) {
+        // 非文件跳转
         state.pathArr.push(name)
         state.pathArr = state.pathArr.filter((e) => {
           return e.replace(/(\r\n|\n|\r)/gm, '')
         })
+        console.log(path.value)
+        router.push({name: 'query', params: {query: path.value}})
       }
     }
     const goBack = (name) => {
@@ -142,16 +148,27 @@ export default defineComponent({
         let index = state.pathArr.indexOf(name)
         state.pathArr = state.pathArr.slice(0, index + 1)
       }
+      router.push({name: 'query', params: {query: path.value}})
     }
+    watch(
+      () => route.params.query,
+      (query, prevQuery) => {
+        query = defaultValue(query, [])
+        console.log('watch:', query)
+        state.pathArr = query
+      },
+    )
     watchEffect(() => {
       // watch 副作用函数 首次加载会触发,当值发生变化也会触发
+      const query = defaultValue(route.params.query, [])
+      console.log('watchEffect:', query)
+      state.pathArr = query
       console.log('req_path:', path.value)
       console.log('req_arr:', state.pathArr)
-      fetchItem()
-      state.readme = ''
-      fetchReadMe()
+      refreshPage()
     })
-    return {...toRefs(state), path, fetchItem, goBack, goTarget}
+
+    return {...toRefs(state), path, refreshPage, goBack, goTarget}
   },
 })
 </script>

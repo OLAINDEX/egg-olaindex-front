@@ -14,7 +14,8 @@ const router = createRouter({
       component: Layout,
       children: [
         {
-          path: '',
+          name: 'query',
+          path: '/share/:query*',
           component: List,
         },
         {
