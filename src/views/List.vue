@@ -159,7 +159,6 @@ export default defineComponent({
       },
     )
     watchEffect(() => {
-      // watch 副作用函数 首次加载会触发,当值发生变化也会触发
       const query = defaultValue(route.query.query, '/')
       let arr = query.split('/')
       arr = arr.filter((e) => {
@@ -171,8 +170,7 @@ export default defineComponent({
       console.log('req_arr:', pathItems.value)
       refreshPage()
     })
-
-    return {...toRefs(state), path, pathItems, goBack, goTarget, refreshPage}
+    return {...toRefs(state), path, pathItems, refreshPage, goTarget, goBack}
   },
 })
 </script>
