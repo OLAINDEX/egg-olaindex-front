@@ -31,7 +31,7 @@
               <span class="icon is-medium">
                 <i class="fas fa-sync" :class="{'fa-spin': loading}" aria-hidden="true"></i>
               </span>
-              刷新
+              {{ loading ? '加载中...' : '刷新' }}
             </td>
           </tr>
           <tr v-if="path !== '/'">
@@ -53,11 +53,15 @@
                 ></i>
               </span>
               {{ item.name }}
-              >
             </td>
             <td class="is-hidden-mobile">{{ item.size }}</td>
             <td class="is-hidden-mobile">{{ item.time }}</td>
-            <td>-</td>
+            <td>
+              <span v-if="item.type === 1">-</span>
+              <router-link v-else :to="{name: 'file-detail', query: {query: trim(path, '/') + '/' + item.name}}"
+                >预览</router-link
+              >
+            </td>
           </tr>
           <tr>
             <td colspan="4">{{ item.childCount }} 个项目 {{ item.size }}</td>
@@ -75,7 +79,7 @@
 </template>
 <script>
 import 'github-markdown-css/github-markdown.css'
-import {defineComponent, reactive, computed, watch, watchEffect, ref, toRefs} from 'vue'
+import {defineComponent, reactive, ref, computed, watchEffect, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
@@ -130,6 +134,9 @@ export default defineComponent({
       }, 500)
     }
     const goTarget = (name, type) => {
+      if (state.loading) {
+        return false
+      }
       if (type === 1) {
         // 非文件跳转
         let pathItemArr = path.value.split('/')
@@ -141,6 +148,9 @@ export default defineComponent({
       }
     }
     const goBack = (name) => {
+      if (state.loading) {
+        return false
+      }
       let pathItemArr = path.value.split('/')
       if (typeof name === 'undefined') {
         pathItemArr.pop()
@@ -152,13 +162,6 @@ export default defineComponent({
       }
       router.push({name: 'file-list', query: {query: pathItemArr.join('/')}})
     }
-    watch(
-      () => route.query.query,
-      (query, prevQuery) => {
-        query = defaultValue(query, '/')
-        refreshPage()
-      },
-    )
     watchEffect(() => {
       const query = defaultValue(route.query.query, '/')
       let arr = query.split('/')
@@ -171,7 +174,7 @@ export default defineComponent({
       console.log('req_arr:', pathItems.value)
       refreshPage()
     })
-    return {...toRefs(state), path, pathItems, refreshPage, goTarget, goBack}
+    return {...toRefs(state), path, pathItems, refreshPage, goTarget, goBack, trim}
   },
 })
 </script>
