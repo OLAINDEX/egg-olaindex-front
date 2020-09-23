@@ -15,7 +15,7 @@
         </li>
       </ul>
     </nav>
-    <div class="table-container">
+    <div v-if="!loading" class="table-container">
       <table class="table is-hoverable is-fullwidth is-completely-borderless">
         <thead>
           <tr>
@@ -25,7 +25,6 @@
             <th>更多</th>
           </tr>
         </thead>
-
         <tbody>
           <tr>
             <td colspan="4" class="has-text-grey-light" @click="refreshPage()">
@@ -68,8 +67,11 @@
   </div>
   <div v-if="readme" class="box container">
     <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
-    <div class="columns">
+    <div v-if="!loading" class="columns">
       <div class="column markdown-body" v-html="readme"></div>
+    </div>
+    <div v-else class="columns justify-center">
+      <Spinner></Spinner>
     </div>
   </div>
 </template>
@@ -79,8 +81,11 @@ import {defineComponent, reactive, computed, watch, watchEffect, ref, toRefs} fr
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
+import Spinner from '../components/Spinner.vue'
 
 export default defineComponent({
+  name: 'FileList',
+  components: {Spinner},
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -93,20 +98,16 @@ export default defineComponent({
     const path = computed(() => defaultValue(route.query.query, '/'))
     const pathItems = ref([])
     const fetchItem = () => {
-      state.loading = true
-      setTimeout(() => {
-        share
-          .fetchItem({
-            params: {
-              path: path.value,
-            },
-          })
-          .then((res) => {
-            state.list = res.data.list
-            state.item = res.data.item
-            state.loading = false
-          })
-      }, 500)
+      share
+        .fetchItem({
+          params: {
+            path: path.value,
+          },
+        })
+        .then((res) => {
+          state.list = res.data.list
+          state.item = res.data.item
+        })
     }
     const fetchReadMe = () => {
       let pathItemArr = path.value.split('/')
@@ -124,9 +125,13 @@ export default defineComponent({
         })
     }
     const refreshPage = () => {
-      fetchItem()
-      state.readme = ''
-      fetchReadMe()
+      state.loading = true
+      setTimeout(() => {
+        fetchItem()
+        state.readme = ''
+        fetchReadMe()
+        state.loading = false
+      }, 500)
     }
     const goTarget = (name, type) => {
       if (type === 1) {
