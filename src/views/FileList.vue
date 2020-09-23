@@ -53,6 +53,7 @@
                 ></i>
               </span>
               {{ item.name }}
+              >
             </td>
             <td class="is-hidden-mobile">{{ item.size }}</td>
             <td class="is-hidden-mobile">{{ item.time }}</td>
