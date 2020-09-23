@@ -15,7 +15,7 @@
         </li>
       </ul>
     </nav>
-    <div v-if="!loading" class="table-container">
+    <div class="table-container">
       <table class="table is-hoverable is-fullwidth is-completely-borderless">
         <thead>
           <tr>
@@ -67,11 +67,8 @@
   </div>
   <div v-if="readme" class="box container">
     <p class="title is-6"><i class="fab fa-readme" aria-hidden="true"></i> README</p>
-    <div v-if="!loading" class="columns">
+    <div class="columns">
       <div class="column markdown-body" v-html="readme"></div>
-    </div>
-    <div v-else class="columns justify-center">
-      <Spinner></Spinner>
     </div>
   </div>
 </template>
@@ -81,11 +78,9 @@ import {defineComponent, reactive, computed, watch, watchEffect, ref, toRefs} fr
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
-import Spinner from '../components/Spinner.vue'
 
 export default defineComponent({
   name: 'FileList',
-  components: {Spinner},
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -97,8 +92,8 @@ export default defineComponent({
     })
     const path = computed(() => defaultValue(route.query.query, '/'))
     const pathItems = ref([])
-    const fetchItem = () => {
-      share
+    const fetchItem = async () => {
+      await share
         .fetchItem({
           params: {
             path: path.value,
@@ -109,11 +104,11 @@ export default defineComponent({
           state.item = res.data.item
         })
     }
-    const fetchReadMe = () => {
+    const fetchReadMe = async () => {
       let pathItemArr = path.value.split('/')
       let readme = pathItemArr.concat(['README.md'])
       let doc = trim(readme.join('/'), '/')
-      share
+      await share
         .fetchItem({
           params: {
             path: doc,
@@ -126,10 +121,10 @@ export default defineComponent({
     }
     const refreshPage = () => {
       state.loading = true
-      setTimeout(() => {
-        fetchItem()
+      setTimeout(async () => {
+        await fetchItem()
         state.readme = ''
-        fetchReadMe()
+        await fetchReadMe()
         state.loading = false
       }, 500)
     }
