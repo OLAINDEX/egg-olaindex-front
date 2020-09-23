@@ -10,7 +10,7 @@
             Home
           </a>
         </li>
-        <li v-for="pathItem in pathArr" :key="pathItem.index" :class="{'is-active': pathArr.slice(-1) == pathItem}">
+        <li v-for="pathItem in pathItems" :key="pathItem.index" :class="{'is-active': pathItems.slice(-1) == pathItem}">
           <a href="javascript:void(0)" @click="goBack(pathItem)">{{ pathItem }}</a>
         </li>
       </ul>
@@ -35,7 +35,7 @@
               刷新
             </td>
           </tr>
-          <tr v-if="path">
+          <tr v-if="path !== '/'">
             <td colspan="4" class="has-text-grey-light" @click="goBack()">
               <span class="icon is-medium">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
@@ -75,7 +75,7 @@
 </template>
 <script>
 import 'github-markdown-css/github-markdown.css'
-import {defineComponent, reactive, computed, watch, watchEffect, toRefs} from 'vue'
+import {defineComponent, reactive, computed, watch, watchEffect, ref, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
@@ -85,14 +85,13 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const state = reactive({
-      pathArr: [],
       loading: false,
       list: [],
       item: [],
       readme: '',
     })
-    const path = computed(() => trim(state.pathArr.join('/'), '/'))
-
+    const path = computed(() => defaultValue(route.query.query, '/'))
+    const pathItems = ref([])
     const fetchItem = () => {
       state.loading = true
       setTimeout(() => {
@@ -107,10 +106,11 @@ export default defineComponent({
             state.item = res.data.item
             state.loading = false
           })
-      }, 1000)
+      }, 500)
     }
     const fetchReadMe = () => {
-      let readme = state.pathArr.concat(['README.md'])
+      let pathItemArr = path.value.split('/')
+      let readme = pathItemArr.concat(['README.md'])
       let doc = trim(readme.join('/'), '/')
       share
         .fetchItem({
@@ -131,44 +131,48 @@ export default defineComponent({
     const goTarget = (name, type) => {
       if (type === 1) {
         // 非文件跳转
-        state.pathArr.push(name)
-        state.pathArr = state.pathArr.filter((e) => {
+        let pathItemArr = path.value.split('/')
+        pathItemArr.push(name)
+        pathItemArr = pathItemArr.filter((e) => {
           return e.replace(/(\r\n|\n|\r)/gm, '')
         })
-        console.log(path.value)
-        router.push({name: 'query', params: {query: path.value}})
+        router.push({name: 'file-list', query: {query: pathItemArr.join('/')}})
       }
     }
     const goBack = (name) => {
+      let pathItemArr = path.value.split('/')
       if (typeof name === 'undefined') {
-        state.pathArr.pop()
+        pathItemArr.pop()
       } else if (name === 0) {
-        state.pathArr = []
+        pathItemArr = []
       } else {
-        let index = state.pathArr.indexOf(name)
-        state.pathArr = state.pathArr.slice(0, index + 1)
+        let index = pathItemArr.indexOf(name)
+        pathItemArr = pathItemArr.slice(0, index + 1)
       }
-      router.push({name: 'query', params: {query: path.value}})
+      router.push({name: 'file-list', query: {query: pathItemArr.join('/')}})
     }
     watch(
-      () => route.params.query,
+      () => route.query.query,
       (query, prevQuery) => {
-        query = defaultValue(query, [])
-        console.log('watch:', query)
-        state.pathArr = query
+        query = defaultValue(query, '/')
+        refreshPage()
       },
     )
     watchEffect(() => {
       // watch 副作用函数 首次加载会触发,当值发生变化也会触发
-      const query = defaultValue(route.params.query, [])
-      console.log('watchEffect:', query)
-      state.pathArr = query
+      const query = defaultValue(route.query.query, '/')
+      let arr = query.split('/')
+      arr = arr.filter((e) => {
+        return e.replace(/(\r\n|\n|\r)/gm, '')
+      })
+      pathItems.value = arr
+      console.log('req_query:', query)
       console.log('req_path:', path.value)
-      console.log('req_arr:', state.pathArr)
+      console.log('req_arr:', pathItems.value)
       refreshPage()
     })
 
-    return {...toRefs(state), path, refreshPage, goBack, goTarget}
+    return {...toRefs(state), path, pathItems, goBack, goTarget, refreshPage}
   },
 })
 </script>

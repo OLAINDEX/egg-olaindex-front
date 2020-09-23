@@ -14,8 +14,8 @@ const router = createRouter({
       component: Layout,
       children: [
         {
-          name: 'query',
-          path: '/share/:query*',
+          name: 'file-list',
+          path: '/file',
           component: List,
         },
         {
