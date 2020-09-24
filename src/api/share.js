@@ -1,7 +1,7 @@
 import request from '../utils/request'
 
 const fetchItem = (params) => {
-  return request.get('/share', params)
+  return request.post('/share', params)
 }
 
 

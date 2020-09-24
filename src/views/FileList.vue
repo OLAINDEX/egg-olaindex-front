@@ -58,7 +58,7 @@
             <td class="is-hidden-mobile">{{ item.time }}</td>
             <td>
               <span v-if="item.type === 1">-</span>
-              <router-link v-else :to="{name: 'file-detail', query: {query: trim(path, '/') + '/' + item.name}}"
+              <router-link v-else :to="{name: 'file-detail', query: {path: trim(path, '/') + '/' + item.name}}"
                 >预览</router-link
               >
             </td>
@@ -68,6 +68,9 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div v-if="!isEmpty(meta.nextPageParams)" class="buttons is-centered">
+      <a href="javascript:void(0)" class="is-link" @click="loadMore()">加载更多</a>
     </div>
   </div>
   <div v-if="readme" class="box container">
@@ -79,10 +82,10 @@
 </template>
 <script>
 import 'github-markdown-css/github-markdown.css'
-import {defineComponent, reactive, ref, computed, watch, watchEffect, toRefs} from 'vue'
+import {defineComponent, reactive, ref, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
-import {defaultValue, trim} from '../utils/index'
+import {defaultValue, trim, isEmpty} from '../utils/index'
 
 export default defineComponent({
   name: 'FileList',
@@ -94,19 +97,19 @@ export default defineComponent({
       list: [],
       item: [],
       readme: '',
+      meta: [],
     })
     const path = computed(() => defaultValue(route.query.query, '/'))
     const pathItems = ref([])
     const fetchItem = async () => {
       await share
         .fetchItem({
-          params: {
-            path: path.value,
-          },
+          path: path.value,
         })
         .then((res) => {
           state.list = res.data.list
           state.item = res.data.item
+          state.meta = res.data.meta
         })
     }
     const fetchReadMe = async () => {
@@ -115,10 +118,8 @@ export default defineComponent({
       let doc = trim(readme.join('/'), '/')
       await share
         .fetchItem({
-          params: {
-            path: doc,
-            preview: true,
-          },
+          path: doc,
+          preview: true,
         })
         .then((res) => {
           state.readme = res
@@ -162,25 +163,41 @@ export default defineComponent({
       }
       router.push({name: 'file-list', query: {query: pathItemArr.join('/')}})
     }
-    watch(
-      () => state.loading,
-      (loading) => {
-        console.log('loading:', loading)
-      },
-    )
-    watchEffect(() => {
+    const refreshQuery = () => {
       const query = defaultValue(route.query.query, '/')
       let arr = query.split('/')
       arr = arr.filter((e) => {
         return e.replace(/(\r\n|\n|\r)/gm, '')
       })
       pathItems.value = arr
-      console.log('req_query:', query)
-      console.log('req_path:', path.value)
-      console.log('req_arr:', pathItems.value)
+    }
+    const loadMore = async () => {
+      console.log(state.meta.nextPageParams)
+      await share
+        .fetchItem({
+          path: path.value,
+          params: state.meta.nextPageParams,
+        })
+        .then((res) => {
+          state.meta = res.data.meta
+          state.list = state.list.concat(res.data.list)
+        })
+    }
+    watch(
+      () => route.query.query,
+      (query) => {
+        console.log('watch:', query)
+        if (defaultValue(query, false) !== false || query === '') {
+          refreshQuery()
+          refreshPage()
+        }
+      },
+    )
+    onMounted(() => {
+      refreshQuery()
       refreshPage()
     })
-    return {...toRefs(state), path, pathItems, refreshPage, goTarget, goBack, trim}
+    return {...toRefs(state), path, pathItems, refreshPage, goTarget, goBack, trim, isEmpty, loadMore}
   },
 })
 </script>

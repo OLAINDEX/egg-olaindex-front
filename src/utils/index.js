@@ -34,3 +34,5 @@ export const trim = (str, char, type) => {
   }
   return str.replace(/^\s+|\s+$/g, '')
 }
+
+export const isEmpty = (obj) => [Object, Array].includes((obj || {}).constructor) && !Object.entries(obj || {}).length

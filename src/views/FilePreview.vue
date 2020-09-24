@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {defineComponent, reactive, computed, watchEffect, toRefs} from 'vue'
+import {defineComponent, reactive, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
@@ -38,12 +38,10 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const route = useRoute()
-    const file = computed(() => defaultValue(route.query.query, ''))
+    const file = computed(() => defaultValue(route.query.path, ''))
     const parentDirectoryPath = computed(() => {
-      let query = defaultValue(route.query.query, '')
-      let pathItemArr = query.split('/')
-      pathItemArr.pop()
-      return pathItemArr.join('/')
+      let query = defaultValue(route.query.path, '')
+      return query.split('/').slice(0, -1).join('/')
     })
     const state = reactive({
       loading: false,
@@ -53,9 +51,7 @@ export default defineComponent({
     const fetchItem = async () => {
       await share
         .fetchItem({
-          params: {
-            path: file.value,
-          },
+          path: file.value,
         })
         .then((res) => {
           state.item = res.data
@@ -64,10 +60,8 @@ export default defineComponent({
     const fetchContent = async () => {
       await share
         .fetchItem({
-          params: {
-            path: file.value,
-            preview: true,
-          },
+          path: file.value,
+          preview: true,
         })
         .then((res) => {
           state.content = res
@@ -85,11 +79,19 @@ export default defineComponent({
     const getExtByName = (filename) => {
       return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2)
     }
-
-    watchEffect(() => {
-      const query = defaultValue(route.query.query, '')
+    watch(
+      () => route.query.path,
+      (path) => {
+        console.log('watch:', path)
+        if (defaultValue(path, false) !== false) {
+          render()
+        }
+      },
+    )
+    onMounted(() => {
       render()
     })
+
     return {...toRefs(state), file, parentDirectoryPath, getExtByName}
   },
 })
