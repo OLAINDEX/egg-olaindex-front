@@ -1,6 +1,8 @@
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
-import FileDetail from '../views/FileDetail.vue'
 import FileList from '../views/FileList.vue'
+import FilePreview from '../views/FilePreview.vue'
 import Layout from '../views/Layout.vue'
 import Login from '../views/Login.vue'
 
@@ -23,7 +25,7 @@ const router = createRouter({
         {
           name: 'file-detail',
           path: '/blob',
-          component: FileDetail,
+          component: FilePreview,
         },
         {
           name: 'login',
@@ -35,7 +37,10 @@ const router = createRouter({
   ],
 })
 router.beforeEach((to, from, next) => {
+  NProgress.start()
   next()
 })
-router.afterEach(() => {})
+router.afterEach(() => {
+  NProgress.done()
+})
 export default router

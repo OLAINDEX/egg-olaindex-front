@@ -79,7 +79,7 @@
 </template>
 <script>
 import 'github-markdown-css/github-markdown.css'
-import {defineComponent, reactive, ref, computed, watchEffect, toRefs} from 'vue'
+import {defineComponent, reactive, ref, computed, watch, watchEffect, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
@@ -162,6 +162,12 @@ export default defineComponent({
       }
       router.push({name: 'file-list', query: {query: pathItemArr.join('/')}})
     }
+    watch(
+      () => state.loading,
+      (loading) => {
+        console.log('loading:', loading)
+      },
+    )
     watchEffect(() => {
       const query = defaultValue(route.query.query, '/')
       let arr = query.split('/')

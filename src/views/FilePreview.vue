@@ -7,11 +7,20 @@
       <div class="column">最后修改时间：{{ item.time }}</div>
     </div>
     <div class="columns">
-      <div class="column preview-body" v-html="content"></div>
+      <div class="column">
+        <div class="buttons">
+          <router-link class="button is-primary" :to="{name: 'file-list', query: {query: parentDirectoryPath}}"
+            ><i class="fas fa-arrow-left" aria-hidden="true"></i>&nbsp;&nbsp;返回</router-link
+          >
+          <a class="button is-link" :class="{'is-loading': loading}" :href="item.url" target="_blank"
+            ><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载</a
+          >
+        </div>
+      </div>
     </div>
-    <div class="columns is-centered">
-      <div class="column is-offset-one-quarter is-half">
-        <a class="button is-primary" :href="item.url" target="_blank">下载</a>
+    <div class="content">
+      <div v-if="content" class="block">
+        <CodePreview :language="getExtByName(item.name)" :code="content"></CodePreview>
       </div>
     </div>
   </div>
@@ -22,12 +31,20 @@ import {defineComponent, reactive, computed, watchEffect, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
 import {defaultValue, trim} from '../utils/index'
+import CodePreview from '../components/CodePreview.vue'
 export default defineComponent({
-  name: 'FileDetail',
+  name: 'FilePreview',
+  components: {CodePreview},
   setup() {
     const router = useRouter()
     const route = useRoute()
     const file = computed(() => defaultValue(route.query.query, ''))
+    const parentDirectoryPath = computed(() => {
+      let query = defaultValue(route.query.query, '')
+      let pathItemArr = query.split('/')
+      pathItemArr.pop()
+      return pathItemArr.join('/')
+    })
     const state = reactive({
       loading: false,
       item: [],
@@ -65,12 +82,15 @@ export default defineComponent({
         state.loading = false
       }, 500)
     }
+    const getExtByName = (filename) => {
+      return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2)
+    }
+
     watchEffect(() => {
       const query = defaultValue(route.query.query, '')
-      console.log('req_query:', query)
       render()
     })
-    return {...toRefs(state), file}
+    return {...toRefs(state), file, parentDirectoryPath, getExtByName}
   },
 })
 </script>
