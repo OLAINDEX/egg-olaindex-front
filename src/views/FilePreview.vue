@@ -24,16 +24,15 @@
       </div>
       <div v-else-if="in_array(item.ext, fileExtension.image)" class="block">
         <figure class="image">
-          <img :src="item.url" :alt="item.name" />
+          <img :src="item.thumb.large.url" :alt="item.name" />
         </figure>
       </div>
       <div v-else-if="in_array(item.ext, fileExtension.video)" class="block">
-        <Player :source="item.url" type="video"></Player>
+        <Player :source="item.url" type="video" :poster="item.thumb.large.url"></Player>
       </div>
       <div v-else-if="in_array(item.ext, fileExtension.audio)" class="block">
         <Player :source="item.url" type="audio"></Player>
       </div>
-      <div v-else-if="in_array(item.ext, fileExtension.office)" class="block"></div>
       <div v-else class="block">
         <p>此文件暂不支持预览</p>
       </div>

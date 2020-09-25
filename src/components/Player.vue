@@ -1,5 +1,5 @@
 <template>
-  <video v-if="type === 'video'" id="video-player" crossorigin playsinline controls poster="">
+  <video v-if="type === 'video'" id="video-player" crossorigin playsinline controls :poster="poster">
     <source :src="source" type="video/mp4" />
   </video>
   <audio v-else id="audio-player" crossorigin controls>
@@ -15,6 +15,10 @@ export default defineComponent({
   name: 'Player',
   props: {
     source: {
+      type: String,
+      default: '',
+    },
+    poster: {
       type: String,
       default: '',
     },
