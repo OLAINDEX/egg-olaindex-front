@@ -19,8 +19,23 @@
       </div>
     </div>
     <div class="content">
-      <div v-if="content" class="block">
-        <CodePreview :language="getExtByName(item.name)" :code="content"></CodePreview>
+      <div v-if="in_array(item.ext, fileExtension.txt)" class="block">
+        <CodePreview :language="item.ext" :code="content"></CodePreview>
+      </div>
+      <div v-else-if="in_array(item.ext, fileExtension.image)" class="block">
+        <figure class="image">
+          <img :src="item.url" :alt="item.name" />
+        </figure>
+      </div>
+      <div v-else-if="in_array(item.ext, fileExtension.video)" class="block">
+        <Player :source="item.url" type="video"></Player>
+      </div>
+      <div v-else-if="in_array(item.ext, fileExtension.audio)" class="block">
+        <Player :source="item.url" type="audio"></Player>
+      </div>
+      <div v-else-if="in_array(item.ext, fileExtension.office)" class="block"></div>
+      <div v-else class="block">
+        <p>此文件暂不支持预览</p>
       </div>
     </div>
   </div>
@@ -30,11 +45,12 @@
 import {defineComponent, reactive, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import share from '../api/share'
-import {defaultValue, trim} from '../utils/index'
+import {defaultValue, trim, fileExtension, in_array} from '../utils/index'
 import CodePreview from '../components/CodePreview.vue'
+import Player from '../components/Player.vue'
 export default defineComponent({
   name: 'FilePreview',
-  components: {CodePreview},
+  components: {CodePreview, Player},
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -72,12 +88,11 @@ export default defineComponent({
       setTimeout(async () => {
         await fetchItem()
         state.content = ''
-        await fetchContent()
+        if (in_array(state.item.ext, fileExtension.txt)) {
+          await fetchContent()
+        }
         state.loading = false
       }, 500)
-    }
-    const getExtByName = (filename) => {
-      return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2)
     }
     watch(
       () => route.query.path,
@@ -92,7 +107,7 @@ export default defineComponent({
       render()
     })
 
-    return {...toRefs(state), file, parentDirectoryPath, getExtByName}
+    return {...toRefs(state), file, parentDirectoryPath, fileExtension, in_array}
   },
 })
 </script>

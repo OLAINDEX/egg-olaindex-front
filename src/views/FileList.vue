@@ -70,7 +70,9 @@
       </table>
     </div>
     <div v-if="!isEmpty(meta.nextPageParams)" class="buttons is-centered">
-      <a href="javascript:void(0)" class="is-link" @click="loadMore()">加载更多</a>
+      <a href="javascript:void(0)" class="is-link" @click="loadMore()"
+        >加载更多 <i class="fas fa-sync" :class="{'fa-spin': loading}" aria-hidden="true"></i
+      ></a>
     </div>
   </div>
   <div v-if="readme" class="box container">
@@ -171,17 +173,20 @@ export default defineComponent({
       })
       pathItems.value = arr
     }
-    const loadMore = async () => {
-      console.log(state.meta.nextPageParams)
-      await share
-        .fetchItem({
-          path: path.value,
-          params: state.meta.nextPageParams,
-        })
-        .then((res) => {
-          state.meta = res.data.meta
-          state.list = state.list.concat(res.data.list)
-        })
+    const loadMore = () => {
+      state.loading = true
+      setTimeout(async () => {
+        await share
+          .fetchItem({
+            path: path.value,
+            params: state.meta.nextPageParams,
+          })
+          .then((res) => {
+            state.meta = res.data.meta
+            state.list = state.list.concat(res.data.list)
+          })
+        state.loading = false
+      }, 500)
     }
     watch(
       () => route.query.query,
