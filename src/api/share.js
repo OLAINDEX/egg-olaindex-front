@@ -4,9 +4,6 @@ const fetchItem = (params) => {
   return request.post('/share', params)
 }
 
-
-const share = {
+export default {
   fetchItem,
 }
-
-export default share

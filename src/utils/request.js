@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {toast} from 'bulma-toast'
-
+import {getToken, removeToken} from '../utils/auth'
 const config = {
   baseURL: 'http://localhost:3000',
   timeout: 5000, // Timeout
@@ -11,10 +11,13 @@ const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
   function (config) {
+    const token = getToken()
+    if (token) {
+      config.headers.common['Authorization'] = 'Bearer ' + token
+    }
     return config
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error)
   },
 )
@@ -25,10 +28,35 @@ _axios.interceptors.response.use(
     return response.data
   },
   function (error) {
-    console.log(error)
+    if (error && error.response) {
+      switch (error.response.status) {
+        case 400:
+          if (error.response.data.msg) {
+            error.message = error.response.data.msg
+          } else {
+            error.message = '请求错误'
+          }
+          break
+        case 401:
+          error.message = '登录失效'
+          // 退出登录 todo
+          removeToken()
+          break
+        case 403:
+          error.message = '拒绝访问'
+          break
+
+        case 500:
+          error.message = error.response.data.msg
+          break
+        default:
+          error.message = '网络错误,无法请求到数据！'
+          break
+      }
+    }
     // Do something with response error
     toast({
-      message: '网络错误,无法请求到数据！',
+      message: error.message,
       type: 'is-danger',
       dismissible: true,
     })
