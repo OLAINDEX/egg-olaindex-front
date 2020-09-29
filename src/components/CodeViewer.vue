@@ -7,7 +7,7 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: 'CodePreview',
+  name: 'CodeViewer',
   props: {
     language: {
       type: String,

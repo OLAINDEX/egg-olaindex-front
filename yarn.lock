@@ -566,21 +566,6 @@ builtin-modules@^3.1.0:
   resolved "https://registry.npm.taobao.org/builtin-modules/download/builtin-modules-3.1.0.tgz#aad97c15131eb76b65b50ef208e7584cd76a7484"
   integrity sha1-qtl8FRMet2tltQ7yCOdYTNdqdIQ=
 
-bulma-helpers@^0.3.12:
-  version "0.3.12"
-  resolved "https://registry.npm.taobao.org/bulma-helpers/download/bulma-helpers-0.3.12.tgz#ffdc68eb35aa926bd6e53c0a8b52124b84f5e980"
-  integrity sha1-/9xo6zWqkmvW5TwKi1ISS4T16YA=
-
-bulma-toast@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npm.taobao.org/bulma-toast/download/bulma-toast-2.0.3.tgz#925e8d35af9829eed8b8b5d64a57cf6164bba06b"
-  integrity sha1-kl6NNa+YKe7YuLXWSlfPYWS7oGs=
-
-bulma@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.npm.taobao.org/bulma/download/bulma-0.9.0.tgz#948c5445a49e9d7546f0826cb3820d17178a814f"
-  integrity sha1-lIxURaSenXVG8IJss4INFxeKgU8=
-
 cache-content-type@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/cache-content-type/download/cache-content-type-1.0.1.tgz#035cde2b08ee2129f4a8315ea8f00a00dba1453c"
@@ -1557,7 +1542,7 @@ isexe@^2.0.0:
 
 jest-worker@^24.9.0:
   version "24.9.0"
-  resolved "https://registry.npm.taobao.org/jest-worker/download/jest-worker-24.9.0.tgz?cache=0&sync_timestamp=1597059193924&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjest-worker%2Fdownload%2Fjest-worker-24.9.0.tgz#5dbfdb5b2d322e98567898238a9697bcce67b3e5"
+  resolved "https://registry.npm.taobao.org/jest-worker/download/jest-worker-24.9.0.tgz#5dbfdb5b2d322e98567898238a9697bcce67b3e5"
   integrity sha1-Xb/bWy0yLphWeJgjipaXvM5ns+U=
   dependencies:
     merge-stream "^2.0.0"
@@ -1764,6 +1749,29 @@ magic-string@^0.25.2, magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.4"
 
+mdn-polyfills@^5.20.0:
+  version "5.20.0"
+  resolved "https://registry.npm.taobao.org/mdn-polyfills/download/mdn-polyfills-5.20.0.tgz#ca8247edf20a4f60dec6804372229812b348260b"
+  integrity sha1-yoJH7fIKT2DexoBDciKYErNIJgs=
+
+mdui.jq@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/mdui.jq/download/mdui.jq-2.0.0.tgz#dbb754965b278ebf4c94be4b8461613feda8a5ad"
+  integrity sha1-27dUllsnjr9MlL5LhGFhP+2opa0=
+  dependencies:
+    mdn-polyfills "^5.20.0"
+    promise-polyfill "^8.1.3"
+
+mdui@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/mdui/download/mdui-1.0.0.tgz#82b84ebbfa0e7887ff3cad8c12c06ace00d20836"
+  integrity sha1-grhOu/oOeIf/PK2MEsBqzgDSCDY=
+  dependencies:
+    mdn-polyfills "^5.20.0"
+    mdui.jq "^2.0.0"
+    normalize.css "^8.0.1"
+    promise-polyfill "^8.1.3"
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npm.taobao.org/media-typer/download/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
@@ -1873,6 +1881,11 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/normalize-path/download/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha1-Dc1p/yOhybEf0JeDFmRKA4ghamU=
+
+normalize.css@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.npm.taobao.org/normalize.css/download/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
+  integrity sha1-m5iiCHOLnMJjTKrLxC0THJdIe/M=
 
 npm-run-path@^4.0.0:
   version "4.0.1"
@@ -2121,9 +2134,9 @@ postcss-value-parser@^4.1.0:
   integrity sha1-RD9qIM7WSBor2k+oUypuVdeJoss=
 
 postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.28, postcss@^7.0.32, postcss@^7.0.5, postcss@^7.0.6:
-  version "7.0.34"
-  resolved "https://registry.npm.taobao.org/postcss/download/postcss-7.0.34.tgz#f2baf57c36010df7de4009940f21532c16d65c20"
-  integrity sha1-8rr1fDYBDffeQAmUDyFTLBbWXCA=
+  version "7.0.35"
+  resolved "https://registry.npm.taobao.org/postcss/download/postcss-7.0.35.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpostcss%2Fdownload%2Fpostcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"
+  integrity sha1-0r4AuZj38hHYonaXQHny6SuXDiQ=
   dependencies:
     chalk "^2.4.2"
     source-map "^0.6.1"
@@ -2150,6 +2163,11 @@ progress@^2.0.0:
   version "2.0.3"
   resolved "https://registry.npm.taobao.org/progress/download/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha1-foz42PW48jnBvGi+tOt4Vn1XLvg=
+
+promise-polyfill@^8.1.3:
+  version "8.1.3"
+  resolved "https://registry.npm.taobao.org/promise-polyfill/download/promise-polyfill-8.1.3.tgz#8c99b3cf53f3a91c68226ffde7bde81d7f904116"
+  integrity sha1-jJmzz1PzqRxoIm/9573oHX+QQRY=
 
 pump@^3.0.0:
   version "3.0.0"
@@ -2483,7 +2501,7 @@ table@^5.2.3:
 
 terser@^4.6.2:
   version "4.8.0"
-  resolved "https://registry.npm.taobao.org/terser/download/terser-4.8.0.tgz?cache=0&sync_timestamp=1600354914076&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fterser%2Fdownload%2Fterser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
+  resolved "https://registry.npm.taobao.org/terser/download/terser-4.8.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fterser%2Fdownload%2Fterser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
   integrity sha1-YwVjQ9fHC7KfOvZlhlpG/gOg3xc=
   dependencies:
     commander "^2.20.0"
@@ -2656,10 +2674,10 @@ vue-eslint-parser@^7.1.0:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
-vue-router@4.0.0-beta.9:
-  version "4.0.0-beta.9"
-  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.0-beta.9.tgz#8552c38c9b015527e74c9c6cb4c54868219d601e"
-  integrity sha1-hVLDjJsBVSfnTJxstMVIaCGdYB4=
+vue-router@^4.0.0-beta.12:
+  version "4.0.0-beta.12"
+  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.0-beta.12.tgz#873d1bbd16882ab2ae35973e3e691412104f3914"
+  integrity sha1-hz0bvRaIKrKuNZc+PmkUEhBPORQ=
 
 vue@^3.0.0, vue@^3.0.0-rc.5:
   version "3.0.0"
@@ -2669,11 +2687,6 @@ vue@^3.0.0, vue@^3.0.0-rc.5:
     "@vue/compiler-dom" "3.0.0"
     "@vue/runtime-dom" "3.0.0"
     "@vue/shared" "3.0.0"
-
-vuex@4.0.0-beta.4:
-  version "4.0.0-beta.4"
-  resolved "https://registry.npm.taobao.org/vuex/download/vuex-4.0.0-beta.4.tgz#7b319ead2ef30432b7eaa4e37258ea3c5e44f698"
-  integrity sha1-ezGerS7zBDK36qTjcljqPF5E9pg=
 
 wcwidth@^1.0.1:
   version "1.0.1"

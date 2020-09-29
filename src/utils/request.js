@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {toast} from 'bulma-toast'
+import mdui from 'mdui'
 import {getToken, removeToken} from '../utils/auth'
 const config = {
   baseURL: 'http://localhost:3000',
@@ -55,10 +55,13 @@ _axios.interceptors.response.use(
       }
     }
     // Do something with response error
-    toast({
-      message: error.message,
-      type: 'is-danger',
-      dismissible: true,
+    mdui.snackbar({
+      message: ': ( 数据获取失败...刷新页面或点击按钮以重试',
+      buttonText: '重试',
+      timeout: 0,
+      onButtonClick: function () {
+        window.location.reload()
+      },
     })
     return Promise.reject(error)
   },
