@@ -53,7 +53,12 @@
                   <div class="mdui-list-item-title">
                     <i class="mdui-icon material-icons">{{ file.type === 1 ? `folder_open` : `insert_drive_file` }}</i>
                     {{ file.name }}
-                    <i v-if="file.type === 0" class="mdui-float-right mdui-icon material-icons">file_download</i>
+                    <i
+                      v-if="file.type === 0"
+                      class="mdui-float-right mdui-icon material-icons"
+                      @click="download(file.name)"
+                      >file_download</i
+                    >
                     <div v-if="file.type === 0" class="mdui-list-item-text mdui-list-item-one-line">
                       {{ file.size }} / {{ file.time }}
                     </div>
@@ -209,6 +214,15 @@ export default defineComponent({
       })
       data.loading = false
     }
+    const download = (name) => {
+      let pathItemArr = path.value.split('/')
+      pathItemArr.push(name)
+      pathItemArr = pathItemArr.filter((e) => {
+        return e.replace(/(\r\n|\n|\r)/gm, '')
+      })
+      let url = pathItemArr.join('/')
+      console.log(url)
+    }
     watch(
       () => route.query.q,
       (query) => {
@@ -221,7 +235,7 @@ export default defineComponent({
     onMounted(() => {
       reload()
     })
-    return {...toRefs(data), path, pathList, reload, go, back, more, trim, isEmpty, in_array, fileExtension}
+    return {...toRefs(data), path, pathList, reload, go, back, more, download, trim, isEmpty, in_array, fileExtension}
   },
 })
 </script>

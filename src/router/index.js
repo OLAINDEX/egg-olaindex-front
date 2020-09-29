@@ -12,11 +12,19 @@ const router = createRouter({
       name: 'Home',
       path: '/',
       component: loadView('Home'),
+      meta: {
+        title: 'OLAINDEX',
+        requireAuth: false,
+      },
     },
     {
       name: 'Login',
       path: '/login',
       component: loadView('Login'),
+      meta: {
+        title: '登录',
+        requireAuth: false,
+      },
     },
   ],
 })
