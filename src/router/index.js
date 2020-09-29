@@ -13,6 +13,11 @@ const router = createRouter({
       path: '/',
       component: loadView('Home'),
     },
+    {
+      name: 'Login',
+      path: '/login',
+      component: loadView('Login'),
+    },
   ],
 })
 router.beforeEach((to, from, next) => {

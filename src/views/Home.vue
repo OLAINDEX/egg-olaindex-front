@@ -2,10 +2,10 @@
   <div class="mdui-container">
     <div class="breadcrumb mdui-p-x-2">
       <div class="mdui-chip" mdui-menu="{target: '#choose_user', subMenuTrigger: 'hover'}">
-        <span class="mdui-chip-icon" mdui-tooltip="{content: '用户切换', position: 'top'}">
-          <i class="mdui-icon material-icons">face</i>
+        <span class="mdui-chip-icon">
+          <i class="mdui-icon material-icons">account_circle</i>
         </span>
-        <span class="mdui-chip-title">IMWNK~</span>
+        <span class="mdui-chip-title">24KB</span>
       </div>
       <ul id="choose_user" class="mdui-menu">
         <li class="mdui-menu-item"><a href="#" class="mdui-ripple">国际版</a></li>
@@ -34,15 +34,10 @@
               <li class="mdui-list-item">
                 <div class="mdui-list-item-content">
                   <div class="mdui-list-item-title">
-                    <button
-                      v-if="path !== '/'"
-                      class="mdui-btn mdui-btn-icon"
-                      mdui-tooltip="{content: '返回'}"
-                      @click="back()"
-                    >
+                    <button v-if="path !== '/'" class="mdui-btn mdui-btn-icon" @click="back()">
                       <i class="mdui-icon material-icons">arrow_back</i>
                     </button>
-                    <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}" @click="reload()">
+                    <button class="mdui-btn mdui-btn-icon" @click="reload()">
                       <i class="mdui-icon material-icons">refresh</i>
                     </button>
                   </div>
@@ -56,7 +51,7 @@
               >
                 <div class="mdui-list-item-content">
                   <div class="mdui-list-item-title">
-                    <i class="mdui-icon material-icons">{{ file.type === 1 ? `folder_open` : `description` }}</i>
+                    <i class="mdui-icon material-icons">{{ file.type === 1 ? `folder_open` : `insert_drive_file` }}</i>
                     {{ file.name }}
                     <i v-if="file.type === 0" class="mdui-float-right mdui-icon material-icons">file_download</i>
                     <div v-if="file.type === 0" class="mdui-list-item-text mdui-list-item-one-line">
@@ -79,7 +74,7 @@
               <div class="mdui-typo-subheading-opacity">{{ item.size }} / {{ item.time }}</div>
             </div>
           </div>
-          <div class="mdui-card-media">
+          <div class="mdui-card-media mdui-p-a-2">
             <div v-if="in_array(item.ext, fileExtension.txt)">
               <CodeViewer :language="item.ext" :code="content"></CodeViewer>
             </div>
