@@ -24,78 +24,82 @@
         </span>
       </span>
     </div>
+
     <div class="mdui-card mdui-shadow-0">
-      <template v-if="isFolder">
-        <div class="mdui-card-content">
-          <ul class="mdui-list">
-            <li class="mdui-list-item">
-              <div class="mdui-list-item-content">
-                <div class="mdui-list-item-title">
-                  <button
-                    v-if="path !== '/'"
-                    class="mdui-btn mdui-btn-icon"
-                    mdui-tooltip="{content: '返回'}"
-                    @click="back()"
-                  >
-                    <i class="mdui-icon material-icons">arrow_back</i>
-                  </button>
-                  <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}" @click="reload()">
-                    <i class="mdui-icon material-icons">refresh</i>
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li
-              v-for="file in list"
-              :key="file.index"
-              class="mdui-list-item mdui-ripple"
-              @click="go(file.name, file.type)"
-            >
-              <div class="mdui-list-item-content">
-                <div class="mdui-list-item-title">
-                  <i class="mdui-icon material-icons">{{ file.type === 1 ? `folder_open` : `description` }}</i>
-                  {{ file.name }}
-                  <i v-if="file.type === 0" class="mdui-float-right mdui-icon material-icons">file_download</i>
-                  <div v-if="file.type === 0" class="mdui-list-item-text mdui-list-item-one-line">
-                    {{ file.size }} / {{ file.time }}
+      <Spinner v-if="loading" color="mdui-color-blue-200"></Spinner>
+      <template v-else>
+        <template v-if="isFolder">
+          <div class="mdui-card-content">
+            <ul class="mdui-list">
+              <li class="mdui-list-item">
+                <div class="mdui-list-item-content">
+                  <div class="mdui-list-item-title">
+                    <button
+                      v-if="path !== '/'"
+                      class="mdui-btn mdui-btn-icon"
+                      mdui-tooltip="{content: '返回'}"
+                      @click="back()"
+                    >
+                      <i class="mdui-icon material-icons">arrow_back</i>
+                    </button>
+                    <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}" @click="reload()">
+                      <i class="mdui-icon material-icons">refresh</i>
+                    </button>
                   </div>
                 </div>
-              </div>
-            </li>
-            <li v-if="!isEmpty(meta.nextPageParams)" class="mdui-list-item mdui-ripple" @click="more()">
-              <div class="mdui-list-item-content mdui-text-center">加载更多</div>
-            </li>
-            <li class="mdui-list-item mdui-ripple">{{ item.childCount }} 个项目 {{ item.size }}</li>
-          </ul>
-        </div>
-      </template>
-      <template v-else>
-        <div class="mdui-card-content">
-          <div class="mdui-typo mdui-m-y-2">
-            <div class="mdui-typo-title-opacity">{{ item.name }}</div>
-            <div class="mdui-typo-subheading-opacity">{{ item.size }} / {{ item.time }}</div>
+              </li>
+              <li
+                v-for="file in list"
+                :key="file.index"
+                class="mdui-list-item mdui-ripple"
+                @click="go(file.name, file.type)"
+              >
+                <div class="mdui-list-item-content">
+                  <div class="mdui-list-item-title">
+                    <i class="mdui-icon material-icons">{{ file.type === 1 ? `folder_open` : `description` }}</i>
+                    {{ file.name }}
+                    <i v-if="file.type === 0" class="mdui-float-right mdui-icon material-icons">file_download</i>
+                    <div v-if="file.type === 0" class="mdui-list-item-text mdui-list-item-one-line">
+                      {{ file.size }} / {{ file.time }}
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li v-if="!isEmpty(meta.nextPageParams)" class="mdui-list-item mdui-ripple" @click="more()">
+                <div class="mdui-list-item-content mdui-text-center">加载更多</div>
+              </li>
+              <li class="mdui-list-item mdui-ripple">{{ item.childCount }} 个项目 {{ item.size }}</li>
+            </ul>
           </div>
-        </div>
-        <div class="mdui-card-media">
-          <div v-if="in_array(item.ext, fileExtension.txt)">
-            <CodeViewer :language="item.ext" :code="content"></CodeViewer>
+        </template>
+        <template v-else>
+          <div class="mdui-card-content">
+            <div class="mdui-typo mdui-m-y-2">
+              <div class="mdui-typo-title-opacity">{{ item.name }}</div>
+              <div class="mdui-typo-subheading-opacity">{{ item.size }} / {{ item.time }}</div>
+            </div>
           </div>
-          <div v-else-if="in_array(item.ext, fileExtension.image)">
-            <img class="mdui-img-fluid" :src="item.thumb.large.url" :alt="item.name" />
+          <div class="mdui-card-media">
+            <div v-if="in_array(item.ext, fileExtension.txt)">
+              <CodeViewer :language="item.ext" :code="content"></CodeViewer>
+            </div>
+            <div v-else-if="in_array(item.ext, fileExtension.image)">
+              <img class="mdui-img-fluid" :src="item.thumb.large.url" :alt="item.name" />
+            </div>
+            <div v-else-if="in_array(item.ext, fileExtension.video)">
+              <Player :source="item.url" type="video" :poster="item.thumb.large.url"></Player>
+            </div>
+            <div v-else-if="in_array(item.ext, fileExtension.audio)">
+              <Player :source="item.url" type="audio"></Player>
+            </div>
+            <div v-else>
+              <p>此文件暂不支持预览</p>
+            </div>
           </div>
-          <div v-else-if="in_array(item.ext, fileExtension.video)">
-            <Player :source="item.url" type="video" :poster="item.thumb.large.url"></Player>
-          </div>
-          <div v-else-if="in_array(item.ext, fileExtension.audio)">
-            <Player :source="item.url" type="audio"></Player>
-          </div>
-          <div v-else>
-            <p>此文件暂不支持预览</p>
-          </div>
-        </div>
-        <a :href="item.url" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"
-          ><i class="mdui-icon material-icons">file_download</i></a
-        >
+          <a :href="item.url" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"
+            ><i class="mdui-icon material-icons">file_download</i></a
+          >
+        </template>
       </template>
     </div>
     <div v-if="isFolder && doc" class="mdui-card">
@@ -113,6 +117,7 @@
 import 'github-markdown-css/github-markdown.css'
 import {defineComponent, reactive, ref, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import Spinner from '../components/Spinner.vue'
 import CodeViewer from '../components/CodeViewer.vue'
 import Player from '../components/Player.vue'
 import {defaultValue, trim, isEmpty, fileExtension, in_array} from '../utils/index'
@@ -120,7 +125,7 @@ import {fetchItem} from '../api/share'
 
 export default defineComponent({
   name: 'Home',
-  components: {CodeViewer, Player},
+  components: {Spinner, CodeViewer, Player},
   setup() {
     const router = useRouter()
     const route = useRoute()
