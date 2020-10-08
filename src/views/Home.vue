@@ -65,7 +65,7 @@
                   </div>
                 </div>
               </li>
-              <li v-if="!isEmpty(meta.nextPageParams)" class="mdui-list-item mdui-ripple" @click="more()">
+              <li v-if="!isEmpty(meta.nextPageParams)" id="loadMore" class="mdui-list-item mdui-ripple" @click="more()">
                 <div class="mdui-list-item-content mdui-text-center">加载更多</div>
               </li>
               <li class="mdui-list-item mdui-ripple">{{ item.childCount }} 个项目 {{ item.size }}</li>
@@ -239,3 +239,9 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+.mdui-list-item,
+.mdui-list-item:hover {
+  border-radius: 1rem;
+}
+</style>
