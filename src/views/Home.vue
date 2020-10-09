@@ -205,7 +205,6 @@ export default defineComponent({
       router.push({name: 'Home', query: {q: pathItemArr.join('/')}})
     }
     const more = async () => {
-      data.loading = true
       await fetchItem({
         path: path.value,
         params: data.meta.nextPageParams,
@@ -213,7 +212,6 @@ export default defineComponent({
         data.meta = res.data.meta
         data.list = data.list.concat(res.data.list)
       })
-      data.loading = false
     }
     const download = async (name) => {
       let pathItemArr = path.value.split('/')

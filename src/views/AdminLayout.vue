@@ -68,6 +68,7 @@ export default defineComponent({
   setup() {
     const data = reactive({})
     onMounted(() => {
+      document.getElementsByTagName('body')[0].classList.add('mdui-drawer-body-left')
       mdui.mutation()
     })
     return {...toRefs(data)}

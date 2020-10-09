@@ -9,7 +9,7 @@
             </span>
             <span class="mdui-chip-title">登录</span>
           </div>
-          <form @submit="handleUserLogin">
+          <form @submit.prevent="handleUserLogin()">
             <div class="mdui-textfield mdui-textfield-floating-label">
               <i class="mdui-icon material-icons">face</i>
               <label class="mdui-textfield-label" for="name">用户名</label>
@@ -21,6 +21,7 @@
                 type="text"
                 required
               />
+              <div class="mdui-textfield-error">用户名不能为空</div>
             </div>
             <div class="mdui-textfield mdui-textfield-floating-label">
               <i class="mdui-icon material-icons">https</i>
@@ -33,6 +34,7 @@
                 type="password"
                 required
               />
+              <div class="mdui-textfield-error">密码不能为空</div>
             </div>
             <br />
             <button type="submit" class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme">
@@ -56,14 +58,15 @@ import Storage from '../libs/store'
 export default defineComponent({
   name: 'Login',
   setup() {
+    const router = useRouter()
+    const route = useRoute()
     const data = reactive({
       username: '',
       password: '',
       loading: false,
     })
 
-    const handleUserLogin = async (e) => {
-      e.preventDefault()
+    const handleUserLogin = async () => {
       data.loading = true
       await login({
         username: data.username,
@@ -80,7 +83,7 @@ export default defineComponent({
         } else {
           Storage.set('user', res.data)
           setToken(res.data.token)
-          router.push({path: '/'})
+          router.push({path: '/admin'})
           // 延迟 1 秒显示欢迎信息
           setTimeout(() => {
             mdui.snackbar({

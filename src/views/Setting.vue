@@ -3,7 +3,7 @@
     <div class="mdui-typo">
       <h1>基本设置</h1>
     </div>
-    <form>
+    <form @submit.prevent="postConfig()">
       <div class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label" for="name">站点名称</label>
         <input id="name" v-model="config.name" type="text" class="mdui-textfield-input" name="name" />
@@ -27,12 +27,19 @@ export default defineComponent({
   name: 'Setting',
   setup() {
     const data = reactive({
-      config: [],
+      config: {
+        name: 'OLAINDEX',
+        expires: 1800,
+      },
     })
+    const postConfig = () => {
+      console.log(data.config)
+      mdui.updateTextFields()
+    }
     onMounted(() => {
       mdui.mutation()
     })
-    return {...toRefs(data)}
+    return {...toRefs(data), postConfig}
   },
 })
 </script>
