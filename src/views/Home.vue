@@ -56,7 +56,7 @@
                     <i
                       v-if="file.type === 0"
                       class="mdui-float-right mdui-icon material-icons"
-                      @click="download(file.name)"
+                      @click.stop="download(file.name)"
                       >file_download</i
                     >
                     <div v-if="file.type === 0" class="mdui-list-item-text mdui-list-item-one-line">
@@ -117,6 +117,7 @@
 import 'github-markdown-css/github-markdown.css'
 import {defineComponent, reactive, ref, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import mdui from 'mdui'
 import Spinner from '../components/Spinner.vue'
 import CodeViewer from '../components/CodeViewer.vue'
 import Player from '../components/Player.vue'
@@ -214,14 +215,18 @@ export default defineComponent({
       })
       data.loading = false
     }
-    const download = (name) => {
+    const download = async (name) => {
       let pathItemArr = path.value.split('/')
       pathItemArr.push(name)
       pathItemArr = pathItemArr.filter((e) => {
         return e.replace(/(\r\n|\n|\r)/gm, '')
       })
       let url = pathItemArr.join('/')
-      console.log(url)
+      await fetchItem({
+        path: url,
+      }).then((res) => {
+        window.open(res.data.item.url, '_blank')
+      })
     }
     watch(
       () => route.query.q,
