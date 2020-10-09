@@ -22,13 +22,16 @@
 </template>
 <script>
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
+import mdui from 'mdui'
 export default defineComponent({
   name: 'Setting',
   setup() {
     const data = reactive({
       config: [],
     })
-    onMounted(() => {})
+    onMounted(() => {
+      mdui.mutation()
+    })
     return {...toRefs(data)}
   },
 })
