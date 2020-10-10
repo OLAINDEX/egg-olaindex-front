@@ -143,12 +143,12 @@ export default defineComponent({
     })
     const path = computed(() => defaultValue(route.query.q, '/'))
     const pathList = ref([])
-    const fetchDoc = async () => {
+    const fetchDoc = () => {
       data.doc = ''
       let pathItemArr = path.value.split('/')
       let readme = pathItemArr.concat(['README.md'])
       let doc = trim(readme.join('/'), '/')
-      await fetchItem({
+      fetchItem({
         path: doc,
         preview: true,
       }).then((res) => {
@@ -163,12 +163,12 @@ export default defineComponent({
       })
       pathList.value = list
     }
-    const reload = async () => {
+    const reload = () => {
       // 获取资源
       parseQuery()
       fetchDoc()
       data.loading = true
-      await fetchItem({
+      fetchItem({
         path: path.value,
       }).then((res) => {
         data.loading = false
@@ -204,8 +204,8 @@ export default defineComponent({
       }
       router.push({name: 'Home', query: {q: pathItemArr.join('/')}})
     }
-    const more = async () => {
-      await fetchItem({
+    const more = () => {
+      fetchItem({
         path: path.value,
         params: data.meta.nextPageParams,
       }).then((res) => {
@@ -213,14 +213,14 @@ export default defineComponent({
         data.list = data.list.concat(res.data.list)
       })
     }
-    const download = async (name) => {
+    const download = (name) => {
       let pathItemArr = path.value.split('/')
       pathItemArr.push(name)
       pathItemArr = pathItemArr.filter((e) => {
         return e.replace(/(\r\n|\n|\r)/gm, '')
       })
       let url = pathItemArr.join('/')
-      await fetchItem({
+      fetchItem({
         path: url,
       }).then((res) => {
         window.open(res.data.item.url, '_blank')

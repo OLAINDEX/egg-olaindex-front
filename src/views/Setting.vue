@@ -23,6 +23,7 @@
 <script>
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import mdui from 'mdui'
+import {fetchSetting, updateSetting} from '../api/setting'
 export default defineComponent({
   name: 'Setting',
   setup() {
@@ -33,10 +34,21 @@ export default defineComponent({
       },
     })
     const postConfig = () => {
-      console.log(data.config)
+      updateSetting({
+        config: data.config,
+      }).then((res) => {
+        mdui.snackbar({
+          message: ':) 修改成功',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
       mdui.updateTextFields()
     }
     onMounted(() => {
+      fetchSetting().then((res) => {
+        data.config = res.data
+      })
       mdui.mutation()
     })
     return {...toRefs(data), postConfig}
