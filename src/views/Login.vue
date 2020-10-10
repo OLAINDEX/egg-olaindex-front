@@ -2,46 +2,48 @@
   <div class="mdui-container">
     <div class="mdui-card mdui-shadow-0">
       <div class="mdui-card-content">
-        <div class="mdui-col-md-6 mdui-col-offset-md-3">
-          <div class="mdui-chip">
-            <span class="mdui-chip-icon">
-              <i class="mdui-icon material-icons">account_circle</i>
-            </span>
-            <span class="mdui-chip-title">登录</span>
+        <div class="mdui-row">
+          <div class="mdui-col-md-6 mdui-col-offset-md-3">
+            <div class="mdui-chip">
+              <span class="mdui-chip-icon">
+                <i class="mdui-icon material-icons">account_circle</i>
+              </span>
+              <span class="mdui-chip-title">登录</span>
+            </div>
+            <form @submit.prevent="handleUserLogin()">
+              <div class="mdui-textfield mdui-textfield-floating-label">
+                <i class="mdui-icon material-icons">face</i>
+                <label class="mdui-textfield-label" for="name">用户名</label>
+                <input
+                  id="username"
+                  v-model="username"
+                  name="username"
+                  class="mdui-textfield-input"
+                  type="text"
+                  required
+                />
+                <div class="mdui-textfield-error">用户名不能为空</div>
+              </div>
+              <div class="mdui-textfield mdui-textfield-floating-label">
+                <i class="mdui-icon material-icons">https</i>
+                <label class="mdui-textfield-label" for="password">请输入密码</label>
+                <input
+                  id="password"
+                  v-model="password"
+                  name="password"
+                  class="mdui-textfield-input"
+                  type="password"
+                  required
+                />
+                <div class="mdui-textfield-error">密码不能为空</div>
+              </div>
+              <br />
+              <button type="submit" class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme">
+                <i class="mdui-icon material-icons">fingerprint</i>
+                登录
+              </button>
+            </form>
           </div>
-          <form @submit.prevent="handleUserLogin()">
-            <div class="mdui-textfield mdui-textfield-floating-label">
-              <i class="mdui-icon material-icons">face</i>
-              <label class="mdui-textfield-label" for="name">用户名</label>
-              <input
-                id="username"
-                v-model="username"
-                name="username"
-                class="mdui-textfield-input"
-                type="text"
-                required
-              />
-              <div class="mdui-textfield-error">用户名不能为空</div>
-            </div>
-            <div class="mdui-textfield mdui-textfield-floating-label">
-              <i class="mdui-icon material-icons">https</i>
-              <label class="mdui-textfield-label" for="password">请输入密码</label>
-              <input
-                id="password"
-                v-model="password"
-                name="password"
-                class="mdui-textfield-input"
-                type="password"
-                required
-              />
-              <div class="mdui-textfield-error">密码不能为空</div>
-            </div>
-            <br />
-            <button type="submit" class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme">
-              <i class="mdui-icon material-icons">fingerprint</i>
-              登录
-            </button>
-          </form>
         </div>
       </div>
     </div>

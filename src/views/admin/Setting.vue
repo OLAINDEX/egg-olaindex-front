@@ -3,7 +3,7 @@
     <div class="mdui-typo">
       <h1>基本设置</h1>
     </div>
-    <form @submit.prevent="postConfig()">
+    <form @submit.prevent="handleSubmit()">
       <div class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label" for="name">站点名称</label>
         <input id="name" v-model="config.name" type="text" class="mdui-textfield-input" name="name" />
@@ -33,7 +33,7 @@ export default defineComponent({
         expires: 1800,
       },
     })
-    const postConfig = () => {
+    const handleSubmit = () => {
       updateSetting({
         config: data.config,
       }).then((res) => {
@@ -51,7 +51,7 @@ export default defineComponent({
       })
       mdui.mutation()
     })
-    return {...toRefs(data), postConfig}
+    return {...toRefs(data), handleSubmit}
   },
 })
 </script>
