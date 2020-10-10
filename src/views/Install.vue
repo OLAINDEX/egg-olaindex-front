@@ -12,14 +12,15 @@
     </div>
 
     <form>
-      <label for="account_type" class="mdui-textfield-label"
+      <!-- <label for="account_type" class="mdui-textfield-label"
         ><i class="mdui-icon material-icons">info</i>&nbsp; &nbsp;账户类型</label
       >
       <select id="account_type" name="account_type" class="mdui-select" mdui-select="{position: 'bottom'}">
         <option value="">选择账户类型</option>
         <option value="cn">国内版（世纪互联）</option>
         <option value="com" selected>国际版</option>
-      </select>
+        <option value="shared" >分享链接</option>
+      </select> -->
       <div class="mdui-textfield mdui-textfield-floating-label">
         <i class="mdui-icon material-icons">https</i>
         <label class="mdui-textfield-label" for="client_secret">应用 机密(client secret)</label>
@@ -38,15 +39,8 @@
       <div class="mdui-textfield mdui-textfield-floating-label">
         <i class="mdui-icon material-icons">link</i>
         <label class="mdui-textfield-label" for="redirect_uri">回调地址(redirect_uri)</label>
-        <input
-          id="redirect_uri"
-          type="text"
-          name="redirect_uri"
-          class="mdui-textfield-input"
-          value="https://olaindex.ningkai.wang"
-          required
-        />
-        <div class="mdui-textfield-error">
+        <input id="redirect_uri" type="text" name="redirect_uri" class="mdui-textfield-input" required />
+        <div class="mdui-textfield-helper">
           回调地址不能为空,确保回调地址格式为此形式
           http(s)://you.domain/oauth，使用中转域名无需https协议（注意：如果通过CDN开启HTTPS而非配置SSL证书，部分回调CDN会跳转http地址，从而导致申请失败）
         </div>
