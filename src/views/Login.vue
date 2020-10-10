@@ -51,9 +51,9 @@
 import {defineComponent, reactive, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {setToken} from '../utils/auth'
-import {login} from '../api/user'
-import Storage from '../libs/store'
+import {setToken} from '/@/utils/auth'
+import {login} from '/@/api/user'
+import Storage from '/@/libs/store'
 
 export default defineComponent({
   name: 'Login',
@@ -95,6 +95,7 @@ export default defineComponent({
         }
       })
     }
+
     return {...toRefs(data), handleUserLogin}
   },
 })

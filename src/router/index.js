@@ -1,7 +1,7 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
-import ADMIN from '../views/AdminLayout.vue'
+import ADMIN from '/@/views/admin/AdminLayout.vue'
 
 const loadView = (view) => {
   return () => import(`../views/${view}.vue`)
@@ -28,6 +28,15 @@ const router = createRouter({
       },
     },
     {
+      name: 'Install',
+      path: '/install',
+      component: loadView('Install'),
+      meta: {
+        title: '安装',
+        requireAuth: false,
+      },
+    },
+    {
       name: 'Admin',
       component: ADMIN,
       path: '/admin',
@@ -36,12 +45,12 @@ const router = createRouter({
         {
           name: 'Dashboard',
           path: '',
-          component: loadView('Dashboard'),
+          component: loadView('admin/Dashboard'),
         },
         {
           name: 'Setting',
           path: 'setting',
-          component: loadView('Setting'),
+          component: loadView('admin/Setting'),
         },
       ],
     },

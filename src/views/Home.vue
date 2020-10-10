@@ -118,11 +118,11 @@ import 'github-markdown-css/github-markdown.css'
 import {defineComponent, reactive, ref, computed, watch, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import Spinner from '../components/Spinner.vue'
-import CodeViewer from '../components/CodeViewer.vue'
-import Player from '../components/Player.vue'
-import {defaultValue, trim, isEmpty, fileExtension, in_array} from '../utils/index'
-import {fetchItem} from '../api/share'
+import Spinner from '/@/components/Spinner.vue'
+import CodeViewer from '/@/components/CodeViewer.vue'
+import Player from '/@/components/Player.vue'
+import {defaultValue, trim, isEmpty, fileExtension, in_array} from '/@/utils/index'
+import {fetchItem} from '/@/api/share'
 
 export default defineComponent({
   name: 'Home',

@@ -23,7 +23,7 @@
 <script>
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import mdui from 'mdui'
-import {fetchSetting, updateSetting} from '../api/setting'
+import {fetchSetting, updateSetting} from '/@/api/setting'
 export default defineComponent({
   name: 'Setting',
   setup() {

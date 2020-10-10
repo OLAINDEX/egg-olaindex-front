@@ -67,7 +67,7 @@
 import {defineComponent, reactive, onBeforeMount, onMounted, watch, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {in_array} from '../utils'
+import {in_array} from '/@/utils/index'
 export default defineComponent({
   name: 'Admin',
   setup() {
