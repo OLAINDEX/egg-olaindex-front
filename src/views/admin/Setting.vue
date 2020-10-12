@@ -5,11 +5,6 @@
     </div>
     <form @submit.prevent="handleSubmit()">
       <div class="mdui-textfield mdui-textfield-floating-label">
-        <label class="mdui-textfield-label" for="name">站点名称</label>
-        <input id="name" v-model="config.name" type="text" class="mdui-textfield-input" name="name" />
-      </div>
-      <br />
-      <div class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label" for="expires">缓存时间(秒)</label>
         <input id="expires" v-model="config.expires" type="text" class="mdui-textfield-input" name="expires" />
         <div class="mdui-textfield-helper">建议缓存时间小于60分钟，否则会导致缓存失效</div>
@@ -24,12 +19,12 @@
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import mdui from 'mdui'
 import {fetchSetting, updateSetting} from '/@/api/setting'
+import store from '/@/libs/store'
 export default defineComponent({
   name: 'Setting',
   setup() {
     const data = reactive({
       config: {
-        name: 'OLAINDEX',
         expires: 1800,
       },
     })
@@ -42,7 +37,9 @@ export default defineComponent({
           timeout: 2000,
           position: 'right-top',
         })
+        store.set('app', res.data)
       })
+
       mdui.updateTextFields()
     }
     onMounted(() => {

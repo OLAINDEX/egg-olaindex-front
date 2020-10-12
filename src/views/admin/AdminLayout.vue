@@ -6,7 +6,7 @@
         mdui-drawer="{target: '#main-drawer', swipe: true}"
         ><i class="mdui-icon material-icons">menu</i></span
       >
-      <a href="javascript:void(0)" target="_blank" class="mdui-typo-headline mdui-hidden-xs">24KB</a>
+      <a href="javascript:void(0)" target="_blank" class="mdui-typo-headline mdui-hidden-xs">{{ app.name }}</a>
       <div class="mdui-toolbar-spacer"></div>
       <router-link to="/" class="mdui-btn mdui-btn-icon">
         <i class="mdui-icon material-icons">home</i>
@@ -64,7 +64,7 @@
   <router-view />
 </template>
 <script>
-import {defineComponent, reactive, onBeforeMount, onMounted, watch, toRefs} from 'vue'
+import {defineComponent, reactive, onMounted, watch, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
 import {in_array} from '/@/utils/index'
@@ -73,13 +73,14 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const route = useRoute()
-    const data = reactive({})
+    const data = reactive({
+      app: {
+        name: 'OLAINDEX',
+      },
+    })
     const isSettingRoute = () => {
       return in_array(route.name, ['Setting'], false)
     }
-    onBeforeMount(() => {
-      document.getElementsByTagName('body')[0].classList.add('mdui-drawer-body-left')
-    })
     onMounted(() => {
       mdui.mutation()
     })

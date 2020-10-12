@@ -1,6 +1,8 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
+import {load} from '/@/api/init'
+import store from '/@/libs/store'
 import ADMIN from '/@/views/admin/AdminLayout.vue'
 
 const loadView = (view) => {
@@ -58,6 +60,12 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  const app = store.get('app')
+  if (typeof app === 'undefined') {
+    load().then((res) => {
+      store.set('app', res.data)
+    })
+  }
   next()
 })
 router.afterEach(() => {

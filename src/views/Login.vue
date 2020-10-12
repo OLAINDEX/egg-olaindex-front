@@ -55,7 +55,7 @@ import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
 import {setToken} from '/@/utils/auth'
 import {login} from '/@/api/user'
-import Storage from '/@/libs/store'
+import store from '/@/libs/store'
 
 export default defineComponent({
   name: 'Login',
@@ -78,12 +78,12 @@ export default defineComponent({
         const status = res.status
         if (!status) {
           mdui.snackbar({
-            message: res.msg,
+            message: ':( ' + res.msg,
             timeout: 2000,
             position: 'right-top',
           })
         } else {
-          Storage.set('user', res.data)
+          store.set('user', res.data)
           setToken(res.data.token)
           router.push({path: '/admin'})
           // 延迟 1 秒显示欢迎信息
