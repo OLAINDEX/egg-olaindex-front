@@ -63,8 +63,33 @@ export default defineComponent({
       password_confirmation: '',
     })
     const handleSubmit = () => {
+      if (data.password != data.password_confirmation) {
+        mdui.snackbar({
+          message: ':( 两次密码不一致哦！',
+          timeout: 2000,
+          position: 'right-top',
+        })
+        return false
+      }
       init({username: data.username, password: data.password}).then((res) => {
-        router.push({name: 'Login'})
+        console.log(res)
+        const status = res.status
+        if (!status) {
+          mdui.snackbar({
+            message: res.msg,
+            timeout: 2000,
+            position: 'right-top',
+          })
+        } else {
+          setTimeout(() => {
+            mdui.snackbar({
+              message: ':) 初始化成功！',
+              timeout: 2000,
+              position: 'right-top',
+            })
+          }, 1000)
+          router.push({name: 'Login'})
+        }
       })
     }
     onMounted(() => {
