@@ -55,7 +55,15 @@
           <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
         </div>
         <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
-          <li class="mdui-list-item mdui-ripple">新增账号</li>
+          <router-link
+            :to="{name: 'Account'}"
+            tag="li"
+            exact-active-class="mdui-list-item-active"
+            class="mdui-list-item mdui-ripple"
+            exact
+          >
+            账号列表
+          </router-link>
         </ul>
       </li>
     </ul>

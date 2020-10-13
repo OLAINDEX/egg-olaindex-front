@@ -29,14 +29,18 @@ export default defineComponent({
         install = res.data.install
         store.set('install', install)
         if (!install) {
-          mdui.snackbar({
-            message: '未进行初始化，点击初始化',
-            buttonText: '初始化',
-            timeout: 0,
-            position: 'right-top',
-            onButtonClick: function () {
-              router.push({name: 'Install'})
-            },
+          mdui.dialog({
+            title: '安装提示',
+            content: '未进行初始化，点击初始化',
+            history: false,
+            buttons: [
+              {
+                text: '初始化',
+                onClick: function () {
+                  router.push({path: '/install'})
+                },
+              },
+            ],
           })
         }
       })

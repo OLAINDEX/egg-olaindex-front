@@ -64,6 +64,15 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+        {
+          name: 'Account',
+          path: 'account',
+          component: loadView('admin/Account'),
+          meta: {
+            title: '账号',
+            requiresAuth: true,
+          },
+        },
       ],
     },
   ],
