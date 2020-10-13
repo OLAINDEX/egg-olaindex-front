@@ -3,6 +3,8 @@ import 'nprogress/nprogress.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {load} from '/@/api/init'
 import store from '/@/libs/store'
+import {getToken} from '/@/utils/auth'
+import {markTitle} from '/@/utils/index'
 import ADMIN from '/@/views/admin/AdminLayout.vue'
 
 const loadView = (view) => {
@@ -17,7 +19,7 @@ const router = createRouter({
       component: loadView('Home'),
       meta: {
         title: 'OLAINDEX',
-        requireAuth: false,
+        requiresAuth: false,
       },
     },
     {
@@ -26,7 +28,7 @@ const router = createRouter({
       component: loadView('Login'),
       meta: {
         title: '登录',
-        requireAuth: false,
+        requiresAuth: false,
       },
     },
     {
@@ -35,7 +37,7 @@ const router = createRouter({
       component: loadView('Install'),
       meta: {
         title: '安装',
-        requireAuth: false,
+        requiresAuth: false,
       },
     },
     {
@@ -48,11 +50,19 @@ const router = createRouter({
           name: 'Dashboard',
           path: '',
           component: loadView('admin/Dashboard'),
+          meta: {
+            title: '控制台',
+            requiresAuth: true,
+          },
         },
         {
           name: 'Setting',
           path: 'setting',
           component: loadView('admin/Setting'),
+          meta: {
+            title: '设置',
+            requiresAuth: true,
+          },
         },
       ],
     },
@@ -60,13 +70,33 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  markTitle('OLAINDEX - ' + to.meta.title)
+  const ACCESS_TOKEN = getToken()
+  const LOGIN_PAGE_NAME = 'Login'
   const app = store.get('app')
   if (typeof app === 'undefined') {
     load().then((res) => {
       store.set('app', res.data)
     })
   }
-  next()
+  if (ACCESS_TOKEN && to.name === LOGIN_PAGE_NAME) {
+    next({
+      path: '/admin',
+    })
+  }
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!ACCESS_TOKEN && to.name !== LOGIN_PAGE_NAME) {
+      next({
+        name: LOGIN_PAGE_NAME,
+      })
+    } else if (!ACCESS_TOKEN && to.name === LOGIN_PAGE_NAME) {
+      next()
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 router.afterEach(() => {
   NProgress.done()

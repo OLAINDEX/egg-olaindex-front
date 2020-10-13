@@ -14,7 +14,7 @@
       <a href="javascript:void(0)" class="mdui-btn mdui-btn-icon">
         <i class="mdui-icon material-icons">face</i>
       </a>
-      <a href="javascript:void(0)" class="mdui-btn mdui-btn-icon"
+      <a href="javascript:void(0)" class="mdui-btn mdui-btn-icon" @click="handleUserLogout()"
         ><i class="mdui-icon material-icons">exit_to_app</i></a
       >
     </div>
@@ -67,6 +67,8 @@
 import {defineComponent, reactive, onMounted, watch, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
+import store from '/@/libs/store'
+import {removeToken} from '/@/utils/auth'
 import {in_array} from '/@/utils/index'
 export default defineComponent({
   name: 'Admin',
@@ -81,6 +83,13 @@ export default defineComponent({
     const isSettingRoute = () => {
       return in_array(route.name, ['Setting'], false)
     }
+    const handleUserLogout = () => {
+      removeToken()
+      store.remove('user')
+      router.push({
+        name: 'Login',
+      })
+    }
     onMounted(() => {
       mdui.mutation()
     })
@@ -91,7 +100,7 @@ export default defineComponent({
         mdui.mutation()
       },
     )
-    return {...toRefs(data), isSettingRoute}
+    return {...toRefs(data), isSettingRoute, handleUserLogout}
   },
 })
 </script>

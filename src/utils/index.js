@@ -66,3 +66,12 @@ export const in_array = (needle, haystack, argStrict) => {
 
   return false
 }
+
+/**
+ *
+ * @param {string} title
+ */
+export function markTitle(title) {
+  title = title || 'OLAINDEX'
+  window.document.title = title
+}
