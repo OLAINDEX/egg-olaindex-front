@@ -23,6 +23,15 @@ const router = createRouter({
       },
     },
     {
+      name: 'List',
+      path: '/disk',
+      component: loadView('Home'),
+      meta: {
+        title: 'OLAINDEX',
+        requiresAuth: false,
+      },
+    },
+    {
       name: 'Login',
       path: '/login',
       component: loadView('Login'),

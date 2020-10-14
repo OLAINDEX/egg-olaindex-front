@@ -152,7 +152,7 @@ export default defineComponent({
         path: doc,
         preview: true,
       }).then((res) => {
-        data.doc = res
+        data.doc = res.data.content
       })
     }
     const parseQuery = () => {

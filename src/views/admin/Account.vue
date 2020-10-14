@@ -13,29 +13,19 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
+            <th>备注</th>
+            <th>类型</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Larry the Bird</td>
-            <td></td>
-            <td>@twitter</td>
+          <tr v-for="item in list" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.remark }}</td>
+            <td>{{ accountType(item.type) }}</td>
+            <td>
+              <button class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-theme-accent">删除</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -49,6 +39,12 @@
             <option value="1">世纪互联</option>
             <option value="2">通用版</option>
           </select>
+          <div class="mdui-textfield mdui-textfield-floating-label">
+            <i class="mdui-icon material-icons">flag</i>
+            <label class="mdui-textfield-label" for="remark">账号标识</label>
+            <input v-model="remark" type="text" class="mdui-textfield-input" name="remark" />
+            <div class="mdui-textfield-error">账号不能为空</div>
+          </div>
           <div v-show="type >= 1" class="mdui-textfield mdui-textfield-floating-label">
             <i class="mdui-icon material-icons">apps</i>
             <label class="mdui-textfield-label" for="client_id">client_id</label>
@@ -71,7 +67,7 @@
           <br />
           <div v-show="type < 1" class="mdui-textfield mdui-textfield-floating-label">
             <i class="mdui-icon material-icons">link</i>
-            <label class="mdui-textfield-label" for="redirect_uri">share_uri</label>
+            <label class="mdui-textfield-label" for="share_uri">share_uri</label>
             <input v-model="share_uri" type="text" name="share_uri" class="mdui-textfield-input" />
           </div>
         </form>
@@ -87,24 +83,60 @@
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
+import {init, fetchList, remove} from '/@/api/account'
 export default defineComponent({
   name: 'Account',
   setup() {
     const router = useRouter()
     const route = useRoute()
     const data = reactive({
+      list: [],
+      remark: '',
       type: '1',
       client_id: '',
       client_secret: '',
       redirect_uri: '',
       share_uri: '',
     })
-    const handleSubmit = () => {}
+    const accountType = (type) => {
+      const map = {
+        0: '分享版',
+        1: '世纪互联',
+        2: '通用版',
+      }
+      return map[type]
+    }
+    const fetchAccounts = () => {
+      fetchList().then((res) => {
+        data.list = res.data
+      })
+    }
+    const handleSubmit = () => {
+      const current_uri = window.location.href
+      init({
+        remark: data.remark,
+        type: parseInt(data.type),
+        client_id: data.client_id,
+        client_secret: data.client_secret,
+        redirect_uri: data.redirect_uri,
+        share_uri: data.share_uri,
+        origin_uri: current_uri,
+      }).then((res) => {
+        if (res.status) {
+          if (parseInt(data.type) > 0) {
+            window.location.href = res.data.redirect_uri
+          } else {
+            console.log(res.data)
+          }
+        }
+      })
+    }
+    const handleDelete = () => {}
     onMounted(() => {
+      fetchAccounts()
       mdui.mutation()
-      console.log(window.location.href)
     })
-    return {...toRefs(data)}
+    return {...toRefs(data), handleSubmit, fetchAccounts, accountType}
   },
 })
 </script>

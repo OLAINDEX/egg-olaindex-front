@@ -32,14 +32,15 @@ export default defineComponent({
       updateSetting({
         config: data.config,
       }).then((res) => {
-        mdui.snackbar({
-          message: ':) 修改成功',
-          timeout: 2000,
-          position: 'right-top',
-        })
-        store.set('app', res.data)
+        if (res.status) {
+          mdui.snackbar({
+            message: ':) 修改成功',
+            timeout: 2000,
+            position: 'right-top',
+          })
+          store.set('app', res.data)
+        }
       })
-
       mdui.updateTextFields()
     }
     onMounted(() => {

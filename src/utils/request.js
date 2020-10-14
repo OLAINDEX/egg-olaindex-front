@@ -25,7 +25,17 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function (response) {
-    return response.data
+    const data = response.data
+    if (!data.status) {
+      mdui.snackbar({
+        message: data.msg,
+        timeout: 0,
+        onButtonClick: function () {
+          window.location.reload()
+        },
+      })
+    }
+    return data
   },
   function (error) {
     if (error && error.response) {
