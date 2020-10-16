@@ -15,16 +15,29 @@
             <th>#</th>
             <th>备注</th>
             <th>类型</th>
+            <th>过期时间</th>
             <th>操作</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in list" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.remark }}</td>
-            <td>{{ accountType(item.type) }}</td>
             <td>
-              <button class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-theme-accent">删除</button>
+              <input v-model="item.remark" class="mdui-textfield-input" type="text" @change="handleRemark(item)" />
+            </td>
+            <td>{{ accountType(item.type) }}</td>
+            <td>{{ item.expires_on ? new Date(item.expires_on * 1000).toLocaleString() : '-' }}</td>
+            <td>
+              <button class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-theme-accent" @click="handleDelete(item)">
+                删除
+              </button>
+              <button
+                v-if="!item.isMain"
+                class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-blue-600"
+                @click="handleMark(item)"
+              >
+                设为默认
+              </button>
             </td>
           </tr>
         </tbody>
@@ -74,7 +87,7 @@
       </div>
       <div class="mdui-dialog-actions">
         <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
-        <button class="mdui-btn mdui-ripple" @click="handleSubmit()">提交认证</button>
+        <button class="mdui-btn mdui-ripple" mdui-dialog-confirm @click="handleSubmit()">提交认证</button>
       </div>
     </div>
   </div>
@@ -83,7 +96,7 @@
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {init, fetchList, remove} from '/@/api/account'
+import {init, fetchList, remove, update, mark} from '/@/api/account'
 export default defineComponent({
   name: 'Account',
   setup() {
@@ -126,17 +139,53 @@ export default defineComponent({
           if (parseInt(data.type) > 0) {
             window.location.href = res.data.redirect_uri
           } else {
-            console.log(res.data)
+            fetchAccounts()
+            data.client_id = ''
+            data.client_secret = ''
+            data.redirect_uri = ''
+            data.share_uri = ''
+            data.remark = ''
           }
         }
       })
     }
-    const handleDelete = () => {}
+    const handleDelete = (item) => {
+      remove({id: item.id}).then((res) => {
+        console.log(res.data)
+        fetchAccounts()
+        mdui.snackbar({
+          message: ':) 操作成功！',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
+    }
+    const handleRemark = (item) => {
+      update({id: item.id, remark: item.remark}).then((res) => {
+        console.log(res.data)
+        mdui.snackbar({
+          message: ':) 操作成功！',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
+    }
+    const handleMark = (item) => {
+      mark({id: item.id}).then((res) => {
+        console.log(res.data)
+        fetchAccounts()
+        mdui.snackbar({
+          message: ':) 操作成功！',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
+    }
     onMounted(() => {
       fetchAccounts()
       mdui.mutation()
     })
-    return {...toRefs(data), handleSubmit, fetchAccounts, accountType}
+    return {...toRefs(data), handleSubmit, handleDelete, handleRemark, handleMark, fetchAccounts, accountType}
   },
 })
 </script>

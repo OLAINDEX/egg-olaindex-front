@@ -8,8 +8,11 @@
         <span class="mdui-chip-title">24KB</span>
       </div>
       <ul id="choose_user" class="mdui-menu">
-        <li class="mdui-menu-item"><a href="#" class="mdui-ripple">国际版</a></li>
-        <li class="mdui-menu-item"><a href="#" class="mdui-ripple">国内版</a></li>
+        <template v-for="block in blocks" :key="block.id">
+          <li class="mdui-menu-item">
+            <a href="#" class="mdui-ripple">{{ block.remark }}</a>
+          </li>
+        </template>
       </ul>
       <span class="breadcrumb-item" @click="back(0)">
         <i class="mdui-icon material-icons mdui-icon-dark mdui-m-a-0">chevron_right</i>
@@ -123,6 +126,7 @@ import CodeViewer from '/@/components/CodeViewer.vue'
 import Player from '/@/components/Player.vue'
 import {defaultValue, trim, isEmpty, fileExtension, in_array} from '/@/utils/index'
 import {fetchItem} from '/@/api/share'
+import {fetchBlocks} from '/@/api/home'
 
 export default defineComponent({
   name: 'Home',
@@ -131,6 +135,7 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const data = reactive({
+      blocks: [],
       list: [],
       item: {
         childCount: 0,
@@ -143,6 +148,11 @@ export default defineComponent({
     })
     const path = computed(() => defaultValue(route.query.q, '/'))
     const pathList = ref([])
+    const fetchBlock = () => {
+      fetchBlocks().then((res) => {
+        data.blocks = res.data
+      })
+    }
     const fetchDoc = () => {
       data.doc = ''
       let pathItemArr = path.value.split('/')
@@ -165,6 +175,7 @@ export default defineComponent({
     }
     const reload = () => {
       // 获取资源
+      fetchBlock()
       parseQuery()
       fetchDoc()
       data.loading = true
