@@ -24,7 +24,7 @@ const router = createRouter({
     },
     {
       name: 'List',
-      path: '/disk',
+      path: '/d/:id',
       component: loadView('Home'),
       meta: {
         title: 'OLAINDEX',

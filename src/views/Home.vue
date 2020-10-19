@@ -5,12 +5,14 @@
         <span class="mdui-chip-icon">
           <i class="mdui-icon material-icons">account_circle</i>
         </span>
-        <span class="mdui-chip-title">24KB</span>
+        <span class="mdui-chip-title">{{ main.remark }}</span>
       </div>
       <ul id="choose_user" class="mdui-menu">
         <template v-for="block in blocks" :key="block.id">
           <li class="mdui-menu-item">
-            <a href="#" class="mdui-ripple">{{ block.remark }}</a>
+            <router-link :to="{name: 'List', params: {id: block.id}}" class="mdui-ripple">{{
+              block.remark
+            }}</router-link>
           </li>
         </template>
       </ul>
@@ -135,6 +137,7 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const data = reactive({
+      main: [],
       blocks: [],
       list: [],
       item: {
@@ -148,17 +151,13 @@ export default defineComponent({
     })
     const path = computed(() => defaultValue(route.query.q, '/'))
     const pathList = ref([])
-    const fetchBlock = () => {
-      fetchBlocks().then((res) => {
-        data.blocks = res.data
-      })
-    }
     const fetchDoc = () => {
       data.doc = ''
       let pathItemArr = path.value.split('/')
       let readme = pathItemArr.concat(['README.md'])
       let doc = trim(readme.join('/'), '/')
       fetchItem({
+        id: data.main.id,
         path: doc,
         preview: true,
       }).then((res) => {
@@ -174,19 +173,33 @@ export default defineComponent({
       pathList.value = list
     }
     const reload = () => {
-      // 获取资源
-      fetchBlock()
-      parseQuery()
-      fetchDoc()
-      data.loading = true
-      fetchItem({
-        path: path.value,
-      }).then((res) => {
-        data.loading = false
-        data.list = res.data.list
-        data.item = res.data.item
-        data.isFolder = res.data.item.type
-        data.meta = res.data.meta
+      fetchBlocks().then((res) => {
+        let account_id = route.params.id
+        res.data.forEach((block) => {
+          if (block.isMain) {
+            data.main = block
+          }
+          if (typeof account_id !== 'undefined' && parseInt(account_id) === block.id) {
+            data.main = block
+          }
+        })
+
+        data.blocks = res.data
+        console.log(data.main)
+        // 获取资源
+        parseQuery()
+        fetchDoc()
+        data.loading = true
+        fetchItem({
+          id: data.main.id,
+          path: path.value,
+        }).then((res) => {
+          data.loading = false
+          data.list = res.data.list
+          data.item = res.data.item
+          data.isFolder = res.data.item.type
+          data.meta = res.data.meta
+        })
       })
     }
     const go = (name, type) => {
@@ -198,7 +211,7 @@ export default defineComponent({
       pathItemArr = pathItemArr.filter((e) => {
         return e.replace(/(\r\n|\n|\r)/gm, '')
       })
-      router.push({name: 'Home', query: {q: pathItemArr.join('/')}})
+      router.push({name: 'List', params: {id: data.main.id}, query: {q: pathItemArr.join('/')}})
     }
     const back = (name) => {
       if (data.loading) {
@@ -213,10 +226,11 @@ export default defineComponent({
         let index = pathItemArr.indexOf(name)
         pathItemArr = pathItemArr.slice(0, index + 1)
       }
-      router.push({name: 'Home', query: {q: pathItemArr.join('/')}})
+      router.push({name: 'List', params: {id: data.main.id}, query: {q: pathItemArr.join('/')}})
     }
     const more = () => {
       fetchItem({
+        id: data.main.id,
         path: path.value,
         params: data.meta.nextPageParams,
       }).then((res) => {
@@ -232,6 +246,7 @@ export default defineComponent({
       })
       let url = pathItemArr.join('/')
       fetchItem({
+        id: data.main.id,
         path: url,
       }).then((res) => {
         window.open(res.data.item.url, '_blank')
@@ -240,7 +255,14 @@ export default defineComponent({
     watch(
       () => route.query.q,
       (query) => {
-        console.log('watch:', query)
+        if (defaultValue(query, false) !== false || query === '') {
+          reload()
+        }
+      },
+    )
+    watch(
+      () => route.params.id,
+      (query) => {
         if (defaultValue(query, false) !== false || query === '') {
           reload()
         }
