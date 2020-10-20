@@ -150,14 +150,23 @@ export default defineComponent({
       })
     }
     const handleDelete = (item) => {
-      remove({id: item.id}).then((res) => {
-        fetchAccounts()
-        mdui.snackbar({
-          message: ':) 操作成功！',
-          timeout: 2000,
-          position: 'right-top',
-        })
-      })
+      mdui.confirm(
+        '确认删除吗？',
+        '提示',
+        function () {
+          remove({id: item.id}).then((res) => {
+            fetchAccounts()
+            mdui.snackbar({
+              message: ':) 操作成功！',
+              timeout: 2000,
+              position: 'right-top',
+            })
+          })
+        },
+        function () {
+          return
+        },
+      )
     }
     const handleRemark = (item) => {
       update({id: item.id, remark: item.remark}).then((res) => {
