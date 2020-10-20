@@ -104,7 +104,6 @@ export default defineComponent({
     watch(
       () => route.name,
       (query) => {
-        console.log('watch:', in_array(route.name, ['Setting'], false))
         mdui.mutation()
       },
     )

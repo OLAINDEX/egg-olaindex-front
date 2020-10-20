@@ -175,17 +175,18 @@ export default defineComponent({
     const reload = () => {
       fetchBlocks().then((res) => {
         let account_id = route.params.id
-        res.data.forEach((block) => {
-          if (block.isMain) {
-            data.main = block
+        const blocks = res.data
+        for (let i in blocks) {
+          if (blocks[i].isMain) {
+            data.main = blocks[i]
           }
-          if (typeof account_id !== 'undefined' && parseInt(account_id) === block.id) {
-            data.main = block
+          if (typeof account_id !== 'undefined' && parseInt(account_id) === blocks[i].id) {
+            data.main = blocks[i]
+            break
           }
-        })
+        }
 
-        data.blocks = res.data
-        console.log(data.main)
+        data.blocks = blocks
         // 获取资源
         parseQuery()
         fetchDoc()

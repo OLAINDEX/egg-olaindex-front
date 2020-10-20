@@ -151,7 +151,6 @@ export default defineComponent({
     }
     const handleDelete = (item) => {
       remove({id: item.id}).then((res) => {
-        console.log(res.data)
         fetchAccounts()
         mdui.snackbar({
           message: ':) 操作成功！',
@@ -162,7 +161,6 @@ export default defineComponent({
     }
     const handleRemark = (item) => {
       update({id: item.id, remark: item.remark}).then((res) => {
-        console.log(res.data)
         mdui.snackbar({
           message: ':) 操作成功！',
           timeout: 2000,
@@ -172,7 +170,6 @@ export default defineComponent({
     }
     const handleMark = (item) => {
       mark({id: item.id}).then((res) => {
-        console.log(res.data)
         fetchAccounts()
         mdui.snackbar({
           message: ':) 操作成功！',

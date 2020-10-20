@@ -72,7 +72,6 @@ export default defineComponent({
         return false
       }
       init({username: data.username, password: data.password}).then((res) => {
-        console.log(res)
         const status = res.status
         if (!status) {
           mdui.snackbar({
