@@ -20,12 +20,12 @@ export default defineComponent({
         document.getElementsByTagName('body')[0].classList.remove('mdui-drawer-body-left')
       }
     })
-    onMounted(() => {
+    onMounted(async () => {
       let install = store.get('install')
       if (install) {
         return
       }
-      check().then((res) => {
+      await check().then((res) => {
         install = res.data.install
         store.set('install', install)
         if (!install) {

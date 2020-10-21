@@ -62,7 +62,7 @@ export default defineComponent({
       password: '',
       password_confirmation: '',
     })
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       if (data.password != data.password_confirmation) {
         mdui.snackbar({
           message: ':( 两次密码不一致哦！',
@@ -71,7 +71,7 @@ export default defineComponent({
         })
         return false
       }
-      init({username: data.username, password: data.password}).then((res) => {
+      await init({username: data.username, password: data.password}).then((res) => {
         const status = res.status
         if (!status) {
           mdui.snackbar({

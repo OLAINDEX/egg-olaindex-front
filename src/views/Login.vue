@@ -68,9 +68,9 @@ export default defineComponent({
       loading: false,
     })
 
-    const handleUserLogin = () => {
+    const handleUserLogin = async () => {
       data.loading = true
-      login({
+      await login({
         username: data.username,
         password: data.password,
       }).then((res) => {

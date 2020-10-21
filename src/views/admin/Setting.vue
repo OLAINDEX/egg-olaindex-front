@@ -28,8 +28,8 @@ export default defineComponent({
         expires: 1800,
       },
     })
-    const handleSubmit = () => {
-      updateSetting({
+    const handleSubmit = async () => {
+      await updateSetting({
         config: data.config,
       }).then((res) => {
         if (res.status) {
@@ -43,8 +43,8 @@ export default defineComponent({
       })
       mdui.updateTextFields()
     }
-    onMounted(() => {
-      fetchSetting().then((res) => {
+    onMounted(async () => {
+      await fetchSetting().then((res) => {
         data.config = res.data
       })
       mdui.mutation()

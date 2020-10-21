@@ -119,14 +119,14 @@ export default defineComponent({
       }
       return map[type]
     }
-    const fetchAccounts = () => {
-      fetchList().then((res) => {
+    const fetchAccounts = async () => {
+      await fetchList().then((res) => {
         data.list = res.data
       })
     }
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       const current_uri = window.location.href
-      init({
+      await init({
         remark: data.remark,
         type: parseInt(data.type),
         client_id: data.client_id,
@@ -134,12 +134,12 @@ export default defineComponent({
         redirect_uri: data.redirect_uri,
         share_uri: data.share_uri,
         origin_uri: current_uri,
-      }).then((res) => {
+      }).then(async (res) => {
         if (res.status) {
           if (parseInt(data.type) > 0) {
             window.location.href = res.data.redirect_uri
           } else {
-            fetchAccounts()
+            await fetchAccounts()
             data.client_id = ''
             data.client_secret = ''
             data.redirect_uri = ''
@@ -149,13 +149,13 @@ export default defineComponent({
         }
       })
     }
-    const handleDelete = (item) => {
+    const handleDelete = async (item) => {
       mdui.confirm(
         '确认删除吗？',
         '提示',
-        function () {
-          remove({id: item.id}).then((res) => {
-            fetchAccounts()
+        async function () {
+          await remove({id: item.id}).then(async (res) => {
+            await fetchAccounts()
             mdui.snackbar({
               message: ':) 操作成功！',
               timeout: 2000,
@@ -168,8 +168,8 @@ export default defineComponent({
         },
       )
     }
-    const handleRemark = (item) => {
-      update({id: item.id, remark: item.remark}).then((res) => {
+    const handleRemark = async (item) => {
+      await update({id: item.id, remark: item.remark}).then((res) => {
         mdui.snackbar({
           message: ':) 操作成功！',
           timeout: 2000,
@@ -177,8 +177,8 @@ export default defineComponent({
         })
       })
     }
-    const handleMark = (item) => {
-      mark({id: item.id}).then((res) => {
+    const handleMark = async (item) => {
+      await mark({id: item.id}).then((res) => {
         fetchAccounts()
         mdui.snackbar({
           message: ':) 操作成功！',
@@ -187,8 +187,8 @@ export default defineComponent({
         })
       })
     }
-    onMounted(() => {
-      fetchAccounts()
+    onMounted(async () => {
+      await fetchAccounts()
       mdui.mutation()
     })
     return {...toRefs(data), handleSubmit, handleDelete, handleRemark, handleMark, fetchAccounts, accountType}

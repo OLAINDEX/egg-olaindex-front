@@ -150,13 +150,13 @@ export default defineComponent({
       loading: false,
     })
     const path = computed(() => defaultValue(route.query.q, '/'))
+    const account_id = ref(0)
     const pathList = ref([])
-    const fetchDoc = () => {
-      data.doc = ''
+    const fetchDoc = async () => {
       let pathItemArr = path.value.split('/')
       let readme = pathItemArr.concat(['README.md'])
       let doc = trim(readme.join('/'), '/')
-      fetchItem({
+      await fetchItem({
         id: data.main.id,
         path: doc,
         preview: true,
@@ -172,34 +172,38 @@ export default defineComponent({
       })
       pathList.value = list
     }
-    const reload = () => {
-      fetchBlocks().then((res) => {
-        let account_id = route.params.id
+    const reload = async () => {
+      await fetchBlocks().then(async (res) => {
         const blocks = res.data
+        account_id.value = defaultValue(route.params.id, false)
         for (let i in blocks) {
           if (blocks[i].isMain) {
             data.main = blocks[i]
+            account_id.value = blocks[i].id
           }
-          if (typeof account_id !== 'undefined' && parseInt(account_id) === blocks[i].id) {
+          if (typeof account_id.value !== 'undefined' && parseInt(account_id.value) === blocks[i].id) {
             data.main = blocks[i]
+            account_id.value = blocks[i].id
             break
           }
         }
-
         data.blocks = blocks
         // 获取资源
         parseQuery()
-        fetchDoc()
         data.loading = true
-        fetchItem({
+        data.doc = ''
+        await fetchItem({
           id: data.main.id,
           path: path.value,
-        }).then((res) => {
-          data.loading = false
+        }).then(async (res) => {
+          data.isFolder = res.data.item.type
           data.list = res.data.list
           data.item = res.data.item
-          data.isFolder = res.data.item.type
           data.meta = res.data.meta
+          if (data.isFolder) {
+            await fetchDoc()
+          }
+          data.loading = false
         })
       })
     }
@@ -229,8 +233,8 @@ export default defineComponent({
       }
       router.push({name: 'List', params: {id: data.main.id}, query: {q: pathItemArr.join('/')}})
     }
-    const more = () => {
-      fetchItem({
+    const more = async () => {
+      await fetchItem({
         id: data.main.id,
         path: path.value,
         params: data.meta.nextPageParams,
@@ -239,38 +243,32 @@ export default defineComponent({
         data.list = data.list.concat(res.data.list)
       })
     }
-    const download = (name) => {
+    const download = async (name) => {
       let pathItemArr = path.value.split('/')
       pathItemArr.push(name)
       pathItemArr = pathItemArr.filter((e) => {
         return e.replace(/(\r\n|\n|\r)/gm, '')
       })
       let url = pathItemArr.join('/')
-      fetchItem({
+      await fetchItem({
         id: data.main.id,
         path: url,
       }).then((res) => {
         window.open(res.data.item.url, '_blank')
       })
     }
-    watch(
-      () => route.query.q,
-      (query) => {
-        if (defaultValue(query, false) !== false || query === '') {
-          reload()
-        }
-      },
-    )
-    watch(
-      () => route.params.id,
-      (query) => {
-        if (defaultValue(query, false) !== false || query === '') {
-          reload()
-        }
-      },
-    )
-    onMounted(() => {
-      reload()
+    watch(path, async (query) => {
+      if (defaultValue(query, false) !== false || query === '/') {
+        await reload()
+      }
+    })
+    watch(account_id, async (query) => {
+      if (defaultValue(query, false) !== false || query === '') {
+        await reload()
+      }
+    })
+    onMounted(async () => {
+      await reload()
     })
     return {...toRefs(data), path, pathList, reload, go, back, more, download, trim, isEmpty, in_array, fileExtension}
   },
