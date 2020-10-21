@@ -17,7 +17,7 @@
       <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-float-right" @click.prevent="handleSubmit()">
         <i class="mdui-icon material-icons">check</i> 保存
       </button>
-      <router-link :to="{name: 'Account'}" class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-float-right"
+      <router-link :to="{name: 'Account'}" class="mdui-btn mdui-color-indigo mdui-ripple mdui-float-right"
         ><i class="mdui-icon material-icons">arrow_back</i> 返回</router-link
       >
     </form>
@@ -27,7 +27,7 @@
 import {defineComponent, reactive, computed, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {view, update} from '/@/api/account'
+import {view, update, fetchConfig} from '/@/api/account'
 import {defaultValue} from '/@/utils/index'
 export default defineComponent({
   name: 'AccountSetting',
@@ -40,9 +40,10 @@ export default defineComponent({
         remark: '标识',
         type: 0,
       },
+      confif: {},
     })
     const id = computed(() => defaultValue(route.params.id, 0))
-    const accountType = (type) => {
+    const accountType = (type) => { 
       const map = {
         0: '分享版',
         1: '世纪互联',
@@ -59,6 +60,9 @@ export default defineComponent({
     onMounted(async () => {
       await view({params: {id: id.value}}).then((res) => {
         data.model = res.data
+      })
+      await fetchConfig({params: {id: id.value}}).then((res) => {
+        data.config = res.data
       })
       mdui.mutation()
     })

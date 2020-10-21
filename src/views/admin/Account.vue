@@ -30,7 +30,7 @@
             <td>
               <router-link
                 :to="{name: 'AccountSetting', params: {id: item.id}}"
-                class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-green-600"
+                class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-indigo"
                 >管理</router-link
               >
               <button class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-theme-accent" @click="handleDelete(item)">
