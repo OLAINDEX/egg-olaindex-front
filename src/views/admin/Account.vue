@@ -28,6 +28,11 @@
             <td>{{ accountType(item.type) }}</td>
             <td>{{ item.expires_on ? new Date(item.expires_on * 1000).toLocaleString() : '-' }}</td>
             <td>
+              <router-link
+                :to="{name: 'AccountSetting', params: {id: item.id}}"
+                class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-green-600"
+                >管理</router-link
+              >
               <button class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-theme-accent" @click="handleDelete(item)">
                 删除
               </button>

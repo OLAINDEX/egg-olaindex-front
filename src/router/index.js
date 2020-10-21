@@ -82,6 +82,15 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+        {
+          name: 'AccountSetting',
+          path: 'account/:id',
+          component: loadView('admin/AccountSetting'),
+          meta: {
+            title: '账号详情',
+            requiresAuth: true,
+          },
+        },
       ],
     },
   ],

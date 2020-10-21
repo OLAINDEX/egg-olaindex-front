@@ -42,7 +42,7 @@
                     <button v-if="path !== '/'" class="mdui-btn mdui-btn-icon" @click="back()">
                       <i class="mdui-icon material-icons">arrow_back</i>
                     </button>
-                    <button class="mdui-btn mdui-btn-icon" @click="reload()">
+                    <button class="mdui-btn mdui-btn-icon" @click="load()">
                       <i class="mdui-icon material-icons">refresh</i>
                     </button>
                   </div>
@@ -172,7 +172,7 @@ export default defineComponent({
       })
       pathList.value = list
     }
-    const reload = async () => {
+    const load = async () => {
       await fetchBlocks().then(async (res) => {
         const blocks = res.data
         account_id.value = defaultValue(route.params.id, false)
@@ -189,9 +189,9 @@ export default defineComponent({
         }
         data.blocks = blocks
         // 获取资源
-        parseQuery()
         data.loading = true
         data.doc = ''
+        parseQuery()
         await fetchItem({
           id: data.main.id,
           path: path.value,
@@ -259,18 +259,18 @@ export default defineComponent({
     }
     watch(path, async (query) => {
       if (defaultValue(query, false) !== false || query === '/') {
-        await reload()
+        await load()
       }
     })
     watch(account_id, async (query) => {
       if (defaultValue(query, false) !== false || query === '') {
-        await reload()
+        await load()
       }
     })
     onMounted(async () => {
-      await reload()
+      await load()
     })
-    return {...toRefs(data), path, pathList, reload, go, back, more, download, trim, isEmpty, in_array, fileExtension}
+    return {...toRefs(data), path, pathList, load, go, back, more, download, trim, isEmpty, in_array, fileExtension}
   },
 })
 </script>

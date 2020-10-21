@@ -8,6 +8,10 @@ export const fetchList = (params) => {
   return request.get('/account/list', params)
 }
 
+export const view = (params) => {
+  return request.get('/account/view', params)
+}
+
 export const update = (params) => {
   return request.post('/account/update', params)
 }
