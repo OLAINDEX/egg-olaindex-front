@@ -13,6 +13,23 @@
         <input v-model="model.remark" type="text" class="mdui-textfield-input" name="remark" />
         <div class="mdui-textfield-helper">标识用于前台显示</div>
       </div>
+      <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label" for="root">起始目录</label>
+        <input v-model="config.root" type="text" class="mdui-textfield-input" name="root" />
+        <div class="mdui-textfield-helper">用于设定显示起始目录</div>
+      </div>
+      <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label" for="hide">隐藏文件</label>
+        <textarea v-model="config.hide" class="mdui-textfield-input" rows="4" name="hide"></textarea>
+        <div class="mdui-textfield-helper">标记的文件、文件夹前台不显示，使用"|"隔开，分隔符为英文符号</div>
+      </div>
+      <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label" for="encrypt">加密文件</label>
+        <textarea v-model="config.encrypt" class="mdui-textfield-input" rows="4" name="encrypt"></textarea>
+        <div class="mdui-textfield-helper">
+          加密的文件、文件夹需要密码访问，形式"目录:密码"，使用"|"隔开，分隔符为英文符号
+        </div>
+      </div>
 
       <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-float-right" @click.prevent="handleSubmit()">
         <i class="mdui-icon material-icons">check</i> 保存
@@ -27,7 +44,7 @@
 import {defineComponent, reactive, computed, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {view, update, fetchConfig} from '/@/api/account'
+import {view, update, fetchConfig, updateConfig} from '/@/api/account'
 import {defaultValue} from '/@/utils/index'
 export default defineComponent({
   name: 'AccountSetting',
@@ -40,10 +57,14 @@ export default defineComponent({
         remark: '标识',
         type: 0,
       },
-      confif: {},
+      config: {
+        id: 0,
+        hide: '',
+        encrypt: '',
+      },
     })
     const id = computed(() => defaultValue(route.params.id, 0))
-    const accountType = (type) => { 
+    const accountType = (type) => {
       const map = {
         0: '分享版',
         1: '世纪互联',
@@ -52,8 +73,17 @@ export default defineComponent({
       return map[type]
     }
     const handleSubmit = async () => {
+      data.config.id = id.value
       await update(data.model).then((res) => {
         console.log(res)
+      })
+      await updateConfig(data.config).then((res) => {
+        console.log(res)
+      })
+      mdui.snackbar({
+        message: ':) 保存成功！',
+        timeout: 2000,
+        position: 'right-top',
       })
       mdui.updateTextFields()
     }

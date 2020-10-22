@@ -18,7 +18,7 @@ const router = createRouter({
       path: '/',
       component: loadView('Home'),
       meta: {
-        title: 'OLAINDEX',
+        title: 'Home',
         requiresAuth: false,
       },
     },
@@ -27,7 +27,7 @@ const router = createRouter({
       path: '/d/:id',
       component: loadView('Home'),
       meta: {
-        title: 'OLAINDEX',
+        title: 'Disk',
         requiresAuth: false,
       },
     },
