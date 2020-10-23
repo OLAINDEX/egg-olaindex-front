@@ -182,18 +182,19 @@ export default defineComponent({
         data.item = res.data.item
         data.meta = res.data.meta
         if (data.isEncrypt) {
+          data.loading = false
           mdui.prompt(
             '文件或文件夹已加密，输入密钥后访问',
             '提示',
             function (value) {
               encryptPassword.value = value
               setTimeout(async () => {
-                await fetchList()
-              }, 800)
+                await load()
+              }, 500)
             },
             function (value) {
               setTimeout(async () => {
-                await fetchList()
+                await load()
               }, 500)
             },
           )
