@@ -35,7 +35,7 @@
       <template v-else>
         <template v-if="is404">
           <div class="mdui-card-content">
-            <p>项目不存在</p>
+            <p>此目录或文件不存在</p>
           </div>
         </template>
         <template v-else>
@@ -102,7 +102,7 @@
                 <CodeViewer :language="item.ext" :code="content"></CodeViewer>
               </div>
               <div v-else-if="in_array(item.ext, fileExtension.image)">
-                <img class="mdui-img-fluid" :src="item.thumb.large.url" :alt="item.name" />
+                <img class="mdui-img-fluid" :src="item.url" :alt="item.name" />
               </div>
               <div v-else-if="in_array(item.ext, fileExtension.video)">
                 <Player :source="item.url" type="video" :poster="item.thumb.large.url"></Player>
@@ -111,10 +111,10 @@
                 <Player :source="item.url" type="audio"></Player>
               </div>
               <div v-else>
-                <p>此文件暂不支持预览</p>
+                <p>此目录或文件暂不支持显示</p>
               </div>
             </div>
-            <a :href="item.url" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"
+            <a v-if="item.name" :href="item.url" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"
               ><i class="mdui-icon material-icons">file_download</i></a
             >
           </template>
@@ -157,29 +157,51 @@ export default defineComponent({
       item: {
         childCount: 0,
         size: '0 B',
+        time: '',
       },
       meta: [],
       doc: '',
       isFolder: true,
       is404: false,
+      isEncrypt: false,
       loading: false,
     })
     const path = computed(() => defaultValue(route.query.q, '/'))
     const pathList = ref([])
+    const encryptPassword = ref('')
     const fetchList = async () => {
       data.loading = true
       await fetchItem({
         id: data.main.id,
         path: path.value,
+        password: encryptPassword.value,
       }).then(async (res) => {
         data.isFolder = res.data.item.type
+        data.isEncrypt = res.data.item.encrypt
         data.list = res.data.list
         data.item = res.data.item
         data.meta = res.data.meta
+        if (data.isEncrypt) {
+          mdui.prompt(
+            '文件或文件夹已加密，输入密钥后访问',
+            '提示',
+            function (value) {
+              encryptPassword.value = value
+              setTimeout(async () => {
+                await fetchList()
+              }, 800)
+            },
+            function (value) {
+              setTimeout(async () => {
+                await fetchList()
+              }, 800)
+            },
+          )
+        }
         if (data.isFolder) {
           await fetchDoc()
         }
-        if (isEmpty(res.data.list) && isEmpty(res.data.item)) {
+        if (isEmpty(res.data.item)) {
           data.is404 = true
         } else {
           data.is404 = false
@@ -195,6 +217,7 @@ export default defineComponent({
         id: data.main.id,
         path: doc,
         preview: true,
+        password: encryptPassword.value,
       }).then((res) => {
         data.doc = res.data.content
       })
@@ -255,6 +278,7 @@ export default defineComponent({
         id: data.main.id,
         path: path.value,
         params: data.meta.nextPageParams,
+        password: encryptPassword.value,
       }).then((res) => {
         data.meta = res.data.meta
         data.list = data.list.concat(res.data.list)
@@ -270,6 +294,7 @@ export default defineComponent({
       await fetchItem({
         id: data.main.id,
         path: url,
+        password: encryptPassword.value,
       }).then((res) => {
         window.open(res.data.item.url, '_blank')
       })
