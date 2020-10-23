@@ -32,6 +32,15 @@ const router = createRouter({
       },
     },
     {
+      name: 'Image',
+      path: '/image',
+      component: loadView('Image'),
+      meta: {
+        title: 'Image',
+        requiresAuth: false,
+      },
+    },
+    {
       name: 'Login',
       path: '/login',
       component: loadView('Login'),

@@ -194,7 +194,7 @@ export default defineComponent({
             function (value) {
               setTimeout(async () => {
                 await fetchList()
-              }, 800)
+              }, 500)
             },
           )
         }
