@@ -30,6 +30,7 @@ _axios.interceptors.response.use(
       mdui.snackbar({
         message: data.msg,
         timeout: 0,
+        position: 'right-top',
         onButtonClick: function () {
           window.location.reload()
         },

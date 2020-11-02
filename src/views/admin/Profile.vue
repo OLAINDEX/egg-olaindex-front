@@ -43,14 +43,24 @@ export default defineComponent({
   setup() {
     const data = reactive({
       user: {
+        id: 0,
         username: '',
       },
     })
     const handleSubmit = async () => {
+      await updateInfo(data.user).then((res) => {
+        mdui.snackbar({
+          message: ':) 修改成功',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
       mdui.updateTextFields()
     }
     onMounted(async () => {
-      await getInfo().then(() => {})
+      await getInfo().then((res) => {
+        data.user = res.data
+      })
       mdui.mutation()
     })
     return {...toRefs(data), handleSubmit}
