@@ -62,7 +62,6 @@ const router = createRouter({
       name: 'Admin',
       component: ADMIN,
       path: '/admin',
-      redirect: '',
       children: [
         {
           name: 'Dashboard',
@@ -70,6 +69,15 @@ const router = createRouter({
           component: loadView('admin/Dashboard'),
           meta: {
             title: '控制台',
+            requiresAuth: true,
+          },
+        },
+        {
+          name: 'Profile',
+          path: 'profile',
+          component: loadView('admin/Profile'),
+          meta: {
+            title: '用户信息',
             requiresAuth: true,
           },
         },

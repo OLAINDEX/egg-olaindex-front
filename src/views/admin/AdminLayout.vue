@@ -6,14 +6,14 @@
         mdui-drawer="{target: '#main-drawer', swipe: true}"
         ><i class="mdui-icon material-icons">menu</i></span
       >
-      <a href="javascript:void(0)" target="_blank" class="mdui-typo-headline mdui-hidden-xs">{{ app.name }}</a>
+      <a href="javascript:void(0)" class="mdui-typo-headline mdui-hidden-xs">{{ app.name }}</a>
       <div class="mdui-toolbar-spacer"></div>
-      <router-link to="/" class="mdui-btn mdui-btn-icon">
+      <router-link :to="{name: 'Home'}" class="mdui-btn mdui-btn-icon">
         <i class="mdui-icon material-icons">home</i>
       </router-link>
-      <a href="javascript:void(0)" class="mdui-btn mdui-btn-icon">
+      <router-link :to="{name: 'Profile'}" class="mdui-btn mdui-btn-icon">
         <i class="mdui-icon material-icons">face</i>
-      </a>
+      </router-link>
       <a href="javascript:void(0)" class="mdui-btn mdui-btn-icon" @click="handleUserLogout()"
         ><i class="mdui-icon material-icons">exit_to_app</i></a
       >

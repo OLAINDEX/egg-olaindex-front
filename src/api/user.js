@@ -5,9 +5,9 @@ export const login = (params) => {
 }
 
 export const getInfo = (params) => {
-  return request.get('/user/info', params)
+  return request.get('/user', params)
 }
 
 export const updateInfo = (params) => {
-  return request.post('/user/update', params)
+  return request.post('/user', params)
 }
