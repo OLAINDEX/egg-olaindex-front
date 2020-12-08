@@ -30,7 +30,7 @@ export default defineComponent({
         store.set('install', install)
         if (!install) {
           mdui.dialog({
-            title: '安装提示',
+            title: '安装提示：',
             content: '未进行初始化，点击初始化',
             history: false,
             buttons: [

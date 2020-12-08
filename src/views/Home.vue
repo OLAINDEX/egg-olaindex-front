@@ -189,7 +189,7 @@ export default defineComponent({
           data.loading = false
           mdui.prompt(
             '文件或文件夹已加密，输入密钥后访问',
-            '提示',
+            '提示：',
             function (value) {
               encryptPassword.value = value
               setTimeout(async () => {
@@ -233,6 +233,22 @@ export default defineComponent({
         const id = defaultValue(route.params.id, false)
         const query = defaultValue(route.query.q, '/')
         data.blocks = blocks
+        if (isEmpty(blocks)) {
+          mdui.dialog({
+            title: '提示：',
+            content: '尚未绑定账号，前往绑定',
+            history: false,
+            buttons: [
+              {
+                text: '点击前往',
+                onClick: function () {
+                  router.push({path: '/admin'})
+                },
+              },
+            ],
+          })
+          return
+        }
         for (let i in blocks) {
           if (blocks[i].isMain) {
             data.main = blocks[i]

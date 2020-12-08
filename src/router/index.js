@@ -112,14 +112,14 @@ const router = createRouter({
     },
   ],
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start()
   markTitle('OLAINDEX - ' + to.meta.title)
   const ACCESS_TOKEN = getToken()
   const LOGIN_PAGE_NAME = 'Login'
   const app = store.get('app')
   if (typeof app === 'undefined') {
-    load().then((res) => {
+    await load().then((res) => {
       store.set('app', res.data)
     })
   }

@@ -38,7 +38,10 @@
                 <div class="mdui-textfield-error">密码不能为空</div>
               </div>
               <br />
-              <button type="submit" class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme">
+              <button
+                type="submit"
+                class="mdui-center mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme mdui-float-right"
+              >
                 <i class="mdui-icon material-icons">fingerprint</i>
                 登录
               </button>

@@ -50,7 +50,8 @@
 <script>
 import {defineComponent, reactive, toRefs, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {init} from '/@/api/init'
+import {init, check} from '/@/api/init'
+import store from '/@/libs/store'
 import mdui from 'mdui'
 export default defineComponent({
   name: 'Install',
@@ -91,7 +92,13 @@ export default defineComponent({
         }
       })
     }
-    onMounted(() => {
+    onMounted(async () => {
+      await check().then((res) => {
+        let install = res.data.install
+        if (install) {
+          router.push({path: '/'})
+        }
+      })
       mdui.mutation()
     })
     return {...toRefs(data), handleSubmit}
