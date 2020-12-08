@@ -2693,10 +2693,10 @@ vue-eslint-parser@^7.1.1:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
-vue-router@^4.0.0-beta.12:
-  version "4.0.0-beta.13"
-  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.0-beta.13.tgz#4611d09a9e44f231cc401ecc294a7f2dcb30e6a6"
-  integrity sha1-RhHQmp5E8jHMQB7MKUp/Lcsw5qY=
+vue-router@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.1.tgz?cache=0&sync_timestamp=1607347184356&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-router%2Fdownload%2Fvue-router-4.0.1.tgz#309240e50524b1e7d4e82e27f0a0fa25fe3d1d71"
+  integrity sha1-MJJA5QUksefU6C4n8KD6Jf49HXE=
 
 vue@^3.0.0, vue@^3.0.0-rc.5:
   version "3.0.2"

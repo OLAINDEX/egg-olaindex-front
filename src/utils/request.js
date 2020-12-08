@@ -3,7 +3,6 @@ import mdui from 'mdui'
 import {getToken, removeToken} from '../utils/auth'
 const config = {
   baseURL: 'http://localhost:3000',
-  timeout: 5000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 }
 
