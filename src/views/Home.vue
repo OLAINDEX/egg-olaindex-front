@@ -84,9 +84,13 @@
                   class="mdui-list-item mdui-ripple"
                   @click="more()"
                 >
-                  <div class="mdui-list-item-content mdui-text-center">加载更多</div>
+                  <div class="mdui-list-item-content mdui-text-center">
+                    加载更多 <i class="mdui-icon material-icons">expand_more</i>
+                  </div>
                 </li>
-                <li class="mdui-list-item mdui-ripple">{{ item.childCount }} 个项目 {{ item.size }}</li>
+                <li class="mdui-list-item mdui-ripple mdui-typo-body-1-opacity">
+                  {{ item.childCount }} 个项目 {{ item.size }}
+                </li>
               </ul>
             </div>
           </template>
