@@ -1,5 +1,5 @@
 <template>
-  <div class="mdui-container mdui-m-t-3">
+  <div class="mdui-container mdui-m-t-5">
     <div class="breadcrumb mdui-p-x-2">
       <div
         class="mdui-chip"
@@ -100,7 +100,7 @@
           </template>
           <template v-else>
             <div class="mdui-card-content">
-              <div class="mdui-typo mdui-m-y-2">
+              <div class="mdui-typo mdui-m-t-2">
                 <div class="mdui-typo-title-opacity">{{ item.name }}</div>
                 <div class="mdui-typo-subheading-opacity">{{ item.size }} / {{ item.time }}</div>
               </div>

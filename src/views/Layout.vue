@@ -4,6 +4,9 @@
     <div class="mdui-toolbar mdui-color-theme mdui-container" style="position: relative">
       <a href="/" class="mdui-typo-headline">OLAINDEX</a>
       <div class="mdui-toolbar-spacer"></div>
+      <router-link :to="{name: 'Image'}" tag="div" class="mdui-btn mdui-btn-icon">
+        <i class="mdui-icon material-icons">insert_photo</i>
+      </router-link>
       <div v-show="display_switch" class="switch-view mdui-p-a-2">
         <label class="mdui-switch" mdui-tooltip="{content: '切换视图'}">
           <i class="mdui-icon material-icons">view_comfy</i> &nbsp;&nbsp;
@@ -40,7 +43,7 @@ export default defineComponent({
       }
     })
     const handleScroll = () => {
-      display_anchor.value = !(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
+      display_anchor.value = !(document.body.scrollTop > 100 || document.documentElement.scrollTop > 100)
     }
     const toTop = () => {
       document.querySelector('#top').scrollIntoView({behavior: 'smooth', block: 'start'})
