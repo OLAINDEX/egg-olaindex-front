@@ -4,6 +4,6 @@ export default {
     '/@/': path.resolve(__dirname, './src'),
   },
   optimizeDeps: {
-    include: ['nprogress/nprogress.js'],
+    include: ['nprogress/nprogress.js', 'clipboard/src/clipboard.js'],
   },
 }

@@ -3,16 +3,108 @@
     <div class="mdui-typo mdui-text-center">
       <div class="mdui-typo-title">图床</div>
       <div class="mdui-typo-Subheading-opacity">您可以尝试文件拖拽或者点击虚线框进行文件上传，单张图片最大支持4MB.</div>
+      <div ref="uploader"><input type="file" name="filepond" class="filepond" /></div>
     </div>
   </div>
 </template>
 <script>
-import {defineComponent, reactive, toRefs} from 'vue'
+import {defineComponent, reactive, ref, toRefs, onMounted} from 'vue'
+import * as FilePond from 'filepond'
+import 'filepond/dist/filepond.css'
+import zh_cn from 'filepond/locale/zh-cn.js'
+import Clipboard from 'clipboard'
 export default defineComponent({
   name: 'Image',
   setup() {
-    const data = reactive({})
-    return {...toRefs(data)}
+    const data = reactive({
+      uploading: false,
+      finished: false,
+      list: [],
+    })
+    const uploader = ref()
+    const filepond = ref()
+    const formatSize = (size) => {
+      if (typeof size !== 'number') size = NaN
+      let count = 0
+      while (size >= 1024) {
+        size /= 1024
+        count++
+      }
+      size = size.toFixed(2)
+      size += [' B', ' KB', ' MB', ' GB', ' TB'][count]
+      return size
+    }
+    const copy = () => {
+      const clipboard = new Clipboard('.clipboard')
+      clipboard.on('success', (e) => {
+        console.log('复制成功')
+        // 释放内存
+        clipboard.destroy()
+      })
+      clipboard.on('error', (e) => {
+        // 不支持复制
+        console.error('该浏览器不支持自动复制')
+        // 释放内存
+        clipboard.destroy()
+      })
+    }
+    const initPond = async () => {
+      FilePond.setOptions(zh_cn)
+      const pond_options = {
+        credits: false,
+        allowRevert: false,
+        allowMultiple: true,
+        maxFiles: 10,
+        maxParallelUploads: 1,
+        server: {
+          process: null,
+          fetch: null,
+          revert: null,
+        },
+      }
+      const pond = FilePond.create(uploader.value, pond_options)
+      pond.on('addfilestart', (file) => {
+        data.finished = false
+      })
+      pond.on('processfilestart', (err, file) => {
+        data.uploading = true
+      })
+      pond.on('processfile', (err, file) => {
+        pond.removeFile(file)
+      })
+      pond.on('processfiles', async () => {})
+      pond.on('warning', (err) => {
+        mdui.snackbar({
+          message: '一次最多可上传10个文件,请重试! ',
+          timeout: 0,
+          position: 'right-top',
+        })
+        console.log(err)
+      })
+      pond.on('error', (err) => {
+        mdui.snackbar({
+          message: err.body,
+          timeout: 0,
+          position: 'right-top',
+        })
+        console.log(err)
+      })
+      pond.beforeAddFile = (file) => {
+        if (data.uploading) {
+          mdui.snackbar({
+            message: '文件上传中，无法添加文件',
+            timeout: 0,
+            position: 'right-top',
+          })
+          return false
+        }
+      }
+      filepond.value = pond
+    }
+    onMounted(async () => {
+      await initPond()
+    })
+    return {...toRefs(data), uploader}
   },
 })
 </script>
