@@ -39,7 +39,7 @@
               <button
                 v-if="!item.isMain"
                 class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-blue-600"
-                @click="handleMark(item)"
+                @click="handleSetMain(item)"
               >
                 设为默认
               </button>
@@ -101,7 +101,7 @@
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {init, fetchList, remove, update, mark} from '/@/api/account'
+import {init, fetchList, remove, update, setMain} from '/@/api/account'
 export default defineComponent({
   name: 'Account',
   setup() {
@@ -182,8 +182,8 @@ export default defineComponent({
         })
       })
     }
-    const handleMark = async (item) => {
-      await mark({id: item.id}).then((res) => {
+    const handleSetMain = async (item) => {
+      await setMain({id: item.id}).then((res) => {
         fetchAccounts()
         mdui.snackbar({
           message: ':) 操作成功！',
@@ -196,7 +196,7 @@ export default defineComponent({
       await fetchAccounts()
       mdui.mutation()
     })
-    return {...toRefs(data), handleSubmit, handleDelete, handleRemark, handleMark, fetchAccounts, accountType}
+    return {...toRefs(data), handleSubmit, handleDelete, handleRemark, handleSetMain, fetchAccounts, accountType}
   },
 })
 </script>

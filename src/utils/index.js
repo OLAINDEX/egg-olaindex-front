@@ -37,15 +37,6 @@ export const trim = (str, char, type) => {
 
 export const isEmpty = (obj) => [Object, Array].includes((obj || {}).constructor) && !Object.entries(obj || {}).length
 
-export const fileExtension = {
-  image: ['ico', 'bmp', 'gif', 'jpg', 'jpeg', 'jpe', 'jfif', 'tif', 'tiff', 'png', 'heic', 'webp'],
-  audio: ['mp3', 'wma', 'flac', 'ape', 'wav', 'ogg', 'm4a'],
-  office: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv'],
-  txt: ['txt', 'bat', 'sh', 'php', 'asp', 'js', 'css', 'json', 'html', 'c', 'cpp', 'md', 'py', 'omf'],
-  video: ['mp4', 'webm', 'mkv', 'mov', 'flv', 'blv', 'avi', 'wmv', 'm3u8', 'rm', 'rmvb'],
-  zip: ['zip', 'rar', '7z', 'gz', 'tar'],
-}
-
 export const in_array = (needle, haystack, argStrict) => {
   let key = ''
   const strict = !!argStrict
@@ -67,11 +58,16 @@ export const in_array = (needle, haystack, argStrict) => {
   return false
 }
 
-/**
- *
- * @param {string} title
- */
 export function markTitle(title) {
   title = title || 'OLAINDEX'
   window.document.title = title
+}
+
+export const fileExtension = {
+  image: ['ico', 'bmp', 'gif', 'jpg', 'jpeg', 'jpe', 'jfif', 'tif', 'tiff', 'png', 'heic', 'webp'],
+  audio: ['mp3', 'wma', 'flac', 'ape', 'wav', 'ogg', 'm4a'],
+  office: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv'],
+  txt: ['txt', 'bat', 'sh', 'php', 'asp', 'js', 'css', 'json', 'html', 'c', 'cpp', 'md', 'py', 'omf'],
+  video: ['mp4', 'webm', 'mkv', 'mov', 'flv', 'blv', 'avi', 'wmv', 'm3u8', 'rm', 'rmvb'],
+  zip: ['zip', 'rar', '7z', 'gz', 'tar'],
 }

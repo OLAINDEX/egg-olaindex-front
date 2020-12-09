@@ -4,11 +4,10 @@
       <div class="mdui-card-content">
         <div class="mdui-row">
           <div class="mdui-col-md-6 mdui-col-offset-md-3">
-            <div class="mdui-chip">
-              <span class="mdui-chip-icon">
-                <i class="mdui-icon material-icons">account_circle</i>
-              </span>
-              <span class="mdui-chip-title">登录</span>
+            <div class="mdui-typo">
+              <div class="mdui-typo-title-opacity mdui-text-center">
+                <i class="mdui-icon material-icons">account_circle</i> 登录
+              </div>
             </div>
             <form @submit.prevent="handleUserLogin()">
               <div class="mdui-textfield mdui-textfield-floating-label">

@@ -92,7 +92,7 @@ export default defineComponent({
         data.model = res.data
       })
       await fetchConfig({params: {id: id.value}}).then((res) => {
-        data.config = res.data
+        data.config = defaultValue(res.data, {})
       })
       mdui.mutation()
     })

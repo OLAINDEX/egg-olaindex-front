@@ -28,6 +28,6 @@ export const remove = (params) => {
   return request.post('/account/delete', params)
 }
 
-export const mark = (params) => {
-  return request.post('/account/mark', params)
+export const setMain = (params) => {
+  return request.post('/account/setMain', params)
 }
