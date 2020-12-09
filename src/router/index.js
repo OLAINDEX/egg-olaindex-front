@@ -5,7 +5,8 @@ import {load} from '/@/api/init'
 import store from '/@/libs/store'
 import {getToken} from '/@/utils/auth'
 import {markTitle} from '/@/utils/index'
-import ADMIN from '/@/views/admin/AdminLayout.vue'
+import AdminLayout from '/@/views/admin/AdminLayout.vue'
+import Layout from '/@/views/Layout.vue'
 
 const loadView = (view) => {
   return () => import(`../views/${view}.vue`)
@@ -14,53 +15,60 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      name: 'Home',
+      name: 'Main',
+      component: Layout,
       path: '/',
-      component: loadView('Home'),
-      meta: {
-        title: 'Home',
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'List',
-      path: '/d/:id',
-      component: loadView('Home'),
-      meta: {
-        title: 'Disk',
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'Image',
-      path: '/image',
-      component: loadView('Image'),
-      meta: {
-        title: 'Image',
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'Login',
-      path: '/login',
-      component: loadView('Login'),
-      meta: {
-        title: '登录',
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'Install',
-      path: '/install',
-      component: loadView('Install'),
-      meta: {
-        title: '安装',
-        requiresAuth: false,
-      },
+      children: [
+        {
+          name: 'Home',
+          path: '/',
+          component: loadView('Home'),
+          meta: {
+            title: 'Home',
+            requiresAuth: false,
+          },
+        },
+        {
+          name: 'List',
+          path: '/d/:id',
+          component: loadView('Home'),
+          meta: {
+            title: 'Disk',
+            requiresAuth: false,
+          },
+        },
+        {
+          name: 'Image',
+          path: '/image',
+          component: loadView('Image'),
+          meta: {
+            title: 'Image',
+            requiresAuth: false,
+          },
+        },
+        {
+          name: 'Login',
+          path: '/login',
+          component: loadView('Login'),
+          meta: {
+            title: '登录',
+            requiresAuth: false,
+          },
+        },
+        {
+          name: 'Install',
+          path: '/install',
+          component: loadView('Install'),
+          meta: {
+            title: '安装',
+            requiresAuth: false,
+          },
+        },
+      ],
     },
     {
       name: 'Admin',
-      component: ADMIN,
+      component: AdminLayout,
       path: '/admin',
       children: [
         {

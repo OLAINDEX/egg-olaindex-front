@@ -1,5 +1,5 @@
 <template>
-  <div class="mdui-container">
+  <div class="mdui-container mdui-m-t-3">
     <div class="mdui-row">
       <div class="mdui-col-md-6 mdui-col-offset-md-3">
         <div class="mdui-typo">

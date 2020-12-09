@@ -1,7 +1,11 @@
 <template>
-  <div class="mdui-container">
+  <div class="mdui-container mdui-m-t-3">
     <div class="breadcrumb mdui-p-x-2">
-      <div class="mdui-chip" mdui-menu="{target: '#choose_user', subMenuTrigger: 'hover'}">
+      <div
+        class="mdui-chip"
+        mdui-menu="{target: '#choose_user', subMenuTrigger: 'hover'}"
+        mdui-tooltip="{content: '切换账号'}"
+      >
         <span class="mdui-chip-icon">
           <i class="mdui-icon material-icons">account_circle</i>
         </span>
