@@ -8,13 +8,13 @@
           </div>
         </div>
         <form @submit.prevent="handleUserLogin()">
-          <div class="mdui-textfield mdui-textfield-floating-label">
+          <div class="mdui-textfield">
             <i class="mdui-icon material-icons">face</i>
             <label class="mdui-textfield-label" for="name">用户名</label>
             <input id="username" v-model="username" name="username" class="mdui-textfield-input" type="text" required />
             <div class="mdui-textfield-error">用户名不能为空</div>
           </div>
-          <div class="mdui-textfield mdui-textfield-floating-label">
+          <div class="mdui-textfield">
             <i class="mdui-icon material-icons">https</i>
             <label class="mdui-textfield-label" for="password">请输入密码</label>
             <input

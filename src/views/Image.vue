@@ -54,8 +54,6 @@ export default defineComponent({
         credits: false,
         allowRevert: false,
         allowMultiple: true,
-        maxFiles: 10,
-        maxParallelUploads: 1,
         server: {
           process: null,
           fetch: null,
@@ -63,42 +61,6 @@ export default defineComponent({
         },
       }
       const pond = FilePond.create(uploader.value, pond_options)
-      pond.on('addfilestart', (file) => {
-        data.finished = false
-      })
-      pond.on('processfilestart', (err, file) => {
-        data.uploading = true
-      })
-      pond.on('processfile', (err, file) => {
-        pond.removeFile(file)
-      })
-      pond.on('processfiles', async () => {})
-      pond.on('warning', (err) => {
-        mdui.snackbar({
-          message: '一次最多可上传10个文件,请重试! ',
-          timeout: 0,
-          position: 'right-top',
-        })
-        console.log(err)
-      })
-      pond.on('error', (err) => {
-        mdui.snackbar({
-          message: err.body,
-          timeout: 0,
-          position: 'right-top',
-        })
-        console.log(err)
-      })
-      pond.beforeAddFile = (file) => {
-        if (data.uploading) {
-          mdui.snackbar({
-            message: '文件上传中，无法添加文件',
-            timeout: 0,
-            position: 'right-top',
-          })
-          return false
-        }
-      }
       filepond.value = pond
     }
     onMounted(async () => {
