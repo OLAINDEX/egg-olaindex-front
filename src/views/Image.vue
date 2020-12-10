@@ -1,10 +1,10 @@
 <template>
   <div class="mdui-container mdui-m-t-5">
-    <div class="mdui-typo mdui-text-center">
+    <div class="mdui-typo mdui-p-a-2">
       <div class="mdui-typo-title">图床</div>
-      <div class="mdui-typo-Subheading-opacity">您可以尝试文件拖拽或者点击虚线框进行文件上传，单张图片最大支持4MB.</div>
-      <div ref="uploader"><input type="file" name="filepond" class="filepond" /></div>
+      <div class="mdui-typo-Subheading-opacity">您可以尝试文件拖拽或者点击虚线框进行图片上传</div>
     </div>
+    <div ref="uploader"><input type="file" name="filepond" class="filepond" /></div>
   </div>
 </template>
 <script>

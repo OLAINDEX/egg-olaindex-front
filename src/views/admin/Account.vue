@@ -43,6 +43,13 @@
               >
                 设为默认
               </button>
+              <button
+                v-if="!item.isImageHost"
+                class="mdui-btn mdui-ripple mdui-btn-dense mdui-color-blue-600"
+                @click="handleSetImageHost(item)"
+              >
+                关联图床
+              </button>
             </td>
           </tr>
         </tbody>
@@ -101,7 +108,7 @@
 import {defineComponent, reactive, onMounted, toRefs} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import mdui from 'mdui'
-import {init, fetchList, remove, update, setMain} from '/@/api/account'
+import {init, fetchList, remove, update, setMain, setImageHost} from '/@/api/account'
 export default defineComponent({
   name: 'Account',
   setup() {
@@ -192,11 +199,30 @@ export default defineComponent({
         })
       })
     }
+    const handleSetImageHost = async (item) => {
+      await setImageHost({id: item.id}).then((res) => {
+        fetchAccounts()
+        mdui.snackbar({
+          message: ':) 操作成功！',
+          timeout: 2000,
+          position: 'right-top',
+        })
+      })
+    }
     onMounted(async () => {
       await fetchAccounts()
       mdui.mutation()
     })
-    return {...toRefs(data), handleSubmit, handleDelete, handleRemark, handleSetMain, fetchAccounts, accountType}
+    return {
+      ...toRefs(data),
+      handleSubmit,
+      handleDelete,
+      handleRemark,
+      handleSetMain,
+      handleSetImageHost,
+      fetchAccounts,
+      accountType,
+    }
   },
 })
 </script>

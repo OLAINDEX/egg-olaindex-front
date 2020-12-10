@@ -31,3 +31,7 @@ export const remove = (params) => {
 export const setMain = (params) => {
   return request.post('/account/setMain', params)
 }
+
+export const setImageHost = (params) => {
+  return request.post('/account/setImageHost', params)
+}
